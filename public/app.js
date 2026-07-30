@@ -6,7 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileNameEl = document.getElementById('fileName');
     const fileSizeEl = document.getElementById('fileSize');
     const removeFileBtn = document.getElementById('removeFileBtn');
+
+    // Cascading Filter elements
     const areaSelect = document.getElementById('areaSelect');
+    const sectionSelect = document.getElementById('sectionSelect');
+    const subdetailSelect = document.getElementById('subdetailSelect');
+
     const generateBtn = document.getElementById('generateBtn');
     const useSampleBtn = document.getElementById('useSampleBtn');
     const spinner = document.getElementById('spinner');
@@ -106,12 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
         fileNameEl.textContent = filename;
         fileSizeEl.textContent = `${formatBytes(bytes)} • ${items.length} Checkpoint Items`;
 
-        // Compute metrics
         const first = items[0] || {};
         metricDocNum.textContent = first.doc_num || '-';
         metricCount.textContent = items.length;
-        
-        // Populate Area Filter Select Dropdown
+        metricGroup.textContent = first.product_group || 'YAMAHA';
+
+        // 1. Populate Area Options
         const areaSet = new Set(items.map(i => i.area_name).filter(Boolean));
         areaSelect.innerHTML = '<option value="ALL">Semua Area (All Areas)</option>';
         areaSet.forEach(areaName => {
@@ -122,17 +127,70 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         metricAreas.textContent = areaSet.size > 0 ? areaSet.size : 1;
-        metricGroup.textContent = first.product_group || 'YAMAHA';
+
+        // Populate Sections and Subdetails initially
+        updateSectionOptions();
 
         filePreviewCard.classList.remove('hidden');
         generateBtn.disabled = false;
     }
+
+    // Cascading Logic: Update Section Options based on Area Selection
+    function updateSectionOptions() {
+        if (!currentJsonData) return;
+        const selectedArea = areaSelect.value;
+        
+        let filtered = currentJsonData;
+        if (selectedArea && selectedArea !== 'ALL') {
+            filtered = filtered.filter(i => i.area_name === selectedArea);
+        }
+
+        const sectionSet = new Set(filtered.map(i => i.section_name).filter(Boolean));
+        sectionSelect.innerHTML = '<option value="ALL">Semua Section (All Sections)</option>';
+        sectionSet.forEach(secName => {
+            const opt = document.createElement('option');
+            opt.value = secName;
+            opt.textContent = secName;
+            sectionSelect.appendChild(opt);
+        });
+
+        updateSubdetailOptions();
+    }
+
+    // Cascading Logic: Update Subdetail Options based on Section Selection
+    function updateSubdetailOptions() {
+        if (!currentJsonData) return;
+        const selectedArea = areaSelect.value;
+        const selectedSec = sectionSelect.value;
+
+        let filtered = currentJsonData;
+        if (selectedArea && selectedArea !== 'ALL') {
+            filtered = filtered.filter(i => i.area_name === selectedArea);
+        }
+        if (selectedSec && selectedSec !== 'ALL') {
+            filtered = filtered.filter(i => i.section_name === selectedSec);
+        }
+
+        const subSet = new Set(filtered.map(i => i.sectiondtl_name).filter(Boolean));
+        subdetailSelect.innerHTML = '<option value="ALL">Semua Sub-bagian (All)</option>';
+        subSet.forEach(subName => {
+            const opt = document.createElement('option');
+            opt.value = subName;
+            opt.textContent = subName;
+            subdetailSelect.appendChild(opt);
+        });
+    }
+
+    areaSelect.addEventListener('change', updateSectionOptions);
+    sectionSelect.addEventListener('change', updateSubdetailOptions);
 
     removeFileBtn.addEventListener('click', () => {
         currentJsonData = null;
         currentFileName = "";
         fileInput.value = "";
         areaSelect.innerHTML = '<option value="ALL">Semua Area (All Areas)</option>';
+        sectionSelect.innerHTML = '<option value="ALL">Semua Section (All Sections)</option>';
+        subdetailSelect.innerHTML = '<option value="ALL">Semua Sub-bagian (All)</option>';
         filePreviewCard.classList.add('hidden');
         generateBtn.disabled = true;
         hideToast();
@@ -160,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 4. Generate & Download Excel (dengan Safe Response Error Handling)
+    // 4. Generate & Download Excel (dengan Cascading Filters)
     generateBtn.addEventListener('click', async () => {
         if (!currentJsonData) return;
 
@@ -168,9 +226,17 @@ document.addEventListener('DOMContentLoaded', () => {
         hideToast();
 
         const selectedArea = areaSelect.value;
+        const selectedSec = sectionSelect.value;
+        const selectedSub = subdetailSelect.value;
+
+        const params = new URLSearchParams();
+        if (selectedArea && selectedArea !== 'ALL') params.append('area', selectedArea);
+        if (selectedSec && selectedSec !== 'ALL') params.append('section', selectedSec);
+        if (selectedSub && selectedSub !== 'ALL') params.append('subdetail', selectedSub);
+
         let apiUrl = '/api/v1/generate-excel/yamaha';
-        if (selectedArea && selectedArea !== 'ALL') {
-            apiUrl += `?area=${encodeURIComponent(selectedArea)}`;
+        if (params.toString()) {
+            apiUrl += `?${params.toString()}`;
         }
 
         try {

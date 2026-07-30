@@ -2,22 +2,54 @@ const ExcelJS = require('exceljs');
 const { processCheckpointPhotos } = require('../imageHandler');
 
 /**
- * Helper untuk membersihkan nama worksheet agar sesuai aturan Excel:
- * Maksimal 31 karakter & tidak boleh mengandung karakter khusus \ / ? * : [ ]
+ * Generator Laporan Checkpoint YAMAHA (Native Excel AutoFilter Ready)
+ * - Murni Tanpa Merged Cell di dalam Body Data Tabel sehingga AutoFilter bawaan Excel [▼] 
+ *   bekerja 100% SEMPURNA untuk menyaring Area, Section, maupun Sub-bagian secara langsung di Microsoft Excel.
+ * 
+ * Kolom Tabel (8 Kolom):
+ *   A: No
+ *   B: Area             <-- Filter Dropdown Excel [▼]
+ *   C: Section          <-- Filter Dropdown Excel [▼]
+ *   D: Sub-bagian       <-- Filter Dropdown Excel [▼]
+ *   E: Pertanyaan Checkpoint
+ *   F: Hasil
+ *   G: Waktu Cek
+ *   H: Foto Lampiran
  */
-function sanitizeSheetName(name) {
-    if (!name) return 'Area';
-    let clean = String(name).replace(/[/\\?%*:|[\]]/g, '_').trim();
-    if (clean.length > 30) {
-        clean = clean.substring(0, 30);
-    }
-    return clean;
-}
+async function generateYamahaExcel(items, areaFilter = null, sectionFilter = null, subdetailFilter = null) {
+    let filteredItems = items;
 
-/**
- * Membangun 1 Worksheet Excel lengkap dengan header, metadata, grouping, dan foto.
- */
-async function buildAreaSheet(workbook, sheetTitle, items) {
+    // 1. Filter per Area jika ditentukan dari UI/API
+    if (areaFilter && areaFilter !== 'ALL' && areaFilter !== 'Semua Area') {
+        filteredItems = filteredItems.filter(item => {
+            const area = String(item.area_name || '').trim().toLowerCase();
+            return area === String(areaFilter).trim().toLowerCase();
+        });
+    }
+
+    // 2. Filter per Section jika ditentukan
+    if (sectionFilter && sectionFilter !== 'ALL' && sectionFilter !== 'Semua Section') {
+        filteredItems = filteredItems.filter(item => {
+            const sec = String(item.section_name || '').trim().toLowerCase();
+            return sec === String(sectionFilter).trim().toLowerCase();
+        });
+    }
+
+    // 3. Filter per Sub-bagian jika ditentukan
+    if (subdetailFilter && subdetailFilter !== 'ALL' && subdetailFilter !== 'Semua Sub-bagian') {
+        filteredItems = filteredItems.filter(item => {
+            const sub = String(item.sectiondtl_name || '').trim().toLowerCase();
+            return sub === String(subdetailFilter).trim().toLowerCase();
+        });
+    }
+
+    if (!filteredItems || filteredItems.length === 0) {
+        filteredItems = items; // Fallback jika filter tidak menghasilkan data
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    const sheetTitle = 'Laporan Checkpoint Yamaha';
+
     const worksheet = workbook.addWorksheet(sheetTitle, {
         views: [{ showGridLines: true }]
     });
@@ -27,9 +59,6 @@ async function buildAreaSheet(workbook, sheetTitle, items) {
     // Palet Warna Slate Executive
     const fillTitle = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };
     const fillTh = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF334155' } };
-    const fillArea = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF475569' } };
-    const fillSection = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF64748B' } };
-    const fillSubdetail = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
     const fillZebra = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
 
     const borderCell = {
@@ -42,17 +71,27 @@ async function buildAreaSheet(workbook, sheetTitle, items) {
     const alignCenter = { horizontal: 'center', vertical: 'middle', wrapText: true };
     const alignLeft = { horizontal: 'left', vertical: 'middle', wrapText: true };
 
-    // --- 1. BANNER JUDUL YAMAHA (A1:E1) ---
-    worksheet.mergeCells('A1:E1');
+    // --- 1. BANNER JUDUL YAMAHA (Merged A1:H1) ---
+    worksheet.mergeCells('A1:H1');
     const titleCell = worksheet.getCell('A1');
-    titleCell.value = `  LAPORAN HASIL CHECKPOINT & INSPEKSI (YAMAHA) - ${sheetTitle.toUpperCase()}`;
+    
+    let filterSubtitle = [];
+    if (areaFilter && areaFilter !== 'ALL') filterSubtitle.push(`Area: ${areaFilter}`);
+    if (sectionFilter && sectionFilter !== 'ALL') filterSubtitle.push(`Sec: ${sectionFilter}`);
+    if (subdetailFilter && subdetailFilter !== 'ALL') filterSubtitle.push(`Sub: ${subdetailFilter}`);
+    
+    const bannerText = filterSubtitle.length > 0
+        ? `  LAPORAN HASIL CHECKPOINT & INSPEKSI (YAMAHA) [${filterSubtitle.join(' | ')}]`
+        : '  LAPORAN HASIL CHECKPOINT & INSPEKSI (YAMAHA)';
+
+    titleCell.value = bannerText;
     titleCell.font = { name: FONT_FAMILY, size: 15, bold: true, color: { argb: 'FFFFFFFF' } };
     titleCell.fill = fillTitle;
     titleCell.alignment = { horizontal: 'left', vertical: 'middle' };
     worksheet.getRow(1).height = 40;
 
     // --- 2. HEADER RINGKASAN METADATA DOKUMEN ---
-    const firstItem = (items && items.length > 0) ? items[0] : {};
+    const firstItem = (filteredItems && filteredItems.length > 0) ? filteredItems[0] : {};
     const docNum = firstItem.doc_num || '-';
     const docDate = firstItem.doc_date || '-';
     const checkUser = firstItem.check_user || '-';
@@ -63,7 +102,7 @@ async function buildAreaSheet(workbook, sheetTitle, items) {
     const metaInfo = [
         ['No. Dokumen', docNum, 'Product Group', productGroup],
         ['Tanggal Dokumen', docDate, 'Petugas Pemeriksa', checkUser],
-        ['Periode Inspeksi', `${startDate} s/d ${endDate}`, 'Total Checkpoint', `${items.length} Item`]
+        ['Periode Inspeksi', `${startDate} s/d ${endDate}`, 'Total Checkpoint', `${filteredItems.length} Item`]
     ];
 
     metaInfo.forEach((row, idx) => {
@@ -80,12 +119,12 @@ async function buildAreaSheet(workbook, sheetTitle, items) {
         cV1.font = { name: FONT_FAMILY, size: 9.5, color: { argb: 'FF0F172A' } };
         cV1.alignment = alignLeft;
 
-        const cL2 = worksheet.getCell(`C${rowIdx}`);
+        const cL2 = worksheet.getCell(`D${rowIdx}`);
         cL2.value = row[2];
         cL2.font = { name: FONT_FAMILY, size: 9.5, bold: true, color: { argb: 'FF475569' } };
         cL2.alignment = alignLeft;
 
-        const cV2 = worksheet.getCell(`D${rowIdx}`);
+        const cV2 = worksheet.getCell(`E${rowIdx}`);
         cV2.value = row[3];
         cV2.font = { name: FONT_FAMILY, size: 9.5, color: { argb: 'FF0F172A' } };
         cV2.alignment = alignLeft;
@@ -93,10 +132,13 @@ async function buildAreaSheet(workbook, sheetTitle, items) {
 
     let currentRow = 7;
 
-    // --- 3. HEADER TABEL DATA (5 KOLOM) ---
+    // --- 3. HEADER TABEL DATA DENGAN AUTOFILTER EXCEL (8 KOLOM) ---
     const headers = [
         { header: 'No', key: 'no', width: 6 },
-        { header: 'Pertanyaan Checkpoint', key: 'question', width: 52 },
+        { header: 'Area', key: 'area', width: 22 },
+        { header: 'Section', key: 'section', width: 20 },
+        { header: 'Sub-bagian', key: 'subdetail', width: 24 },
+        { header: 'Pertanyaan Checkpoint', key: 'question', width: 48 },
         { header: 'Hasil', key: 'result', width: 14 },
         { header: 'Waktu Cek', key: 'date', width: 22 },
         { header: 'Foto Lampiran', key: 'photo', width: 55 }
@@ -114,178 +156,94 @@ async function buildAreaSheet(workbook, sheetTitle, items) {
         worksheet.getColumn(colNum).width = h.width;
     });
 
-    // Aktifkan AutoFilter pada header tabel
-    worksheet.autoFilter = {
-        from: { row: currentRow, column: 1 },
-        to: { row: currentRow, column: 5 }
-    };
-
-    currentRow++;
-
-    // --- 4. GROUPING DATA PER AREA & SECTION ---
-    const groupedData = {};
-    items.forEach(item => {
-        const area = item.area_name || 'Area Tidak Terdefinisi';
-        const sec = item.section_name || 'Section Umum';
-        if (!groupedData[area]) groupedData[area] = {};
-        if (!groupedData[area][sec]) groupedData[area][sec] = [];
-        groupedData[area][sec].push(item);
-    });
+    // POPULASI DATA BARIS (TANPA MERGED ROW AGAR AUTOFILTER EXCEL 100% BEKERJA KELAS DUNIAS)
+    const headerRowIdx = currentRow;
 
     let rowCounter = 1;
     let maxFotoColWidth = 55;
 
-    for (const [areaName, sections] of Object.entries(groupedData)) {
-        // HEADER AREA (A:E)
-        worksheet.getRow(currentRow).height = 24;
-        worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
-        const areaCell = worksheet.getCell(`A${currentRow}`);
-        areaCell.value = ` AREA: ${areaName.toUpperCase()}`;
-        areaCell.font = { name: FONT_FAMILY, size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
-        areaCell.fill = fillArea;
-        areaCell.alignment = { horizontal: 'left', vertical: 'middle' };
-        for (let c = 1; c <= 5; c++) worksheet.getCell(currentRow, c).border = borderCell;
+    for (let idx = 0; idx < filteredItems.length; idx++) {
         currentRow++;
+        const item = filteredItems[idx];
 
-        for (const [sectionName, secItems] of Object.entries(sections)) {
-            // HEADER SECTION (A:E)
-            worksheet.getRow(currentRow).height = 22;
-            worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
-            const secCell = worksheet.getCell(`A${currentRow}`);
-            secCell.value = `   Section: ${sectionName}`;
-            secCell.font = { name: FONT_FAMILY, size: 10.5, bold: true, color: { argb: 'FFFFFFFF' } };
-            secCell.fill = fillSection;
-            secCell.alignment = { horizontal: 'left', vertical: 'middle' };
-            for (let c = 1; c <= 5; c++) worksheet.getCell(currentRow, c).border = borderCell;
-            currentRow++;
+        const areaName = item.area_name || 'Area Tidak Terdefinisi';
+        const sectionName = item.section_name || 'Section Umum';
+        const subDtlName = item.sectiondtl_name || '-';
+        const cpName = item.checkpoint_name || '';
+        const resultVal = String(item.result || '').trim();
+        const secDate = item.section_date || '';
+        const imgPathStr = item.img_path || '';
 
-            let lastSecDtl = null;
-            for (const item of secItems) {
-                const secDtl = item.sectiondtl_name;
-                if (secDtl && secDtl !== lastSecDtl) {
-                    worksheet.getRow(currentRow).height = 20;
-                    worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
-                    const dtlCell = worksheet.getCell(`A${currentRow}`);
-                    dtlCell.value = `     • Sub-bagian: ${secDtl}`;
-                    dtlCell.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FF1E293B' } };
-                    dtlCell.fill = fillSubdetail;
-                    dtlCell.alignment = { horizontal: 'left', vertical: 'middle' };
-                    for (let c = 1; c <= 5; c++) worksheet.getCell(currentRow, c).border = borderCell;
-                    currentRow++;
-                    lastSecDtl = secDtl;
-                }
+        const isEven = (rowCounter % 2 === 0);
+        worksheet.getRow(currentRow).height = 28;
 
-                const cpName = item.checkpoint_name || '';
-                const resultVal = String(item.result || '').trim();
-                const secDate = item.section_date || '';
-                const imgPathStr = item.img_path || '';
+        // Set Cell Values (8 Kolom Murni Tanpa Merged Cells)
+        const c1 = worksheet.getCell(currentRow, 1); c1.value = rowCounter; c1.alignment = alignCenter;
+        const c2 = worksheet.getCell(currentRow, 2); c2.value = areaName; c2.alignment = alignCenter;
+        const c3 = worksheet.getCell(currentRow, 3); c3.value = sectionName; c3.alignment = alignCenter;
+        const c4 = worksheet.getCell(currentRow, 4); c4.value = subDtlName; c4.alignment = alignCenter;
+        const c5 = worksheet.getCell(currentRow, 5); c5.value = cpName; c5.alignment = alignLeft;
+        const c6 = worksheet.getCell(currentRow, 6); c6.value = resultVal; c6.alignment = alignCenter;
+        const c7 = worksheet.getCell(currentRow, 7); c7.value = secDate; c7.alignment = alignCenter;
+        const c8 = worksheet.getCell(currentRow, 8); c8.alignment = alignCenter;
 
-                const isEven = (rowCounter % 2 === 0);
-
-                // Set Cell Values (5 Kolom)
-                const c1 = worksheet.getCell(currentRow, 1); c1.value = rowCounter; c1.alignment = alignCenter;
-                const c2 = worksheet.getCell(currentRow, 2); c2.value = cpName; c2.alignment = alignLeft;
-                const c3 = worksheet.getCell(currentRow, 3); c3.value = resultVal; c3.alignment = alignCenter;
-                const c4 = worksheet.getCell(currentRow, 4); c4.value = secDate; c4.alignment = alignCenter;
-                const c5 = worksheet.getCell(currentRow, 5); c5.alignment = alignCenter;
-
-                // Color Result Badge
-                if (resultVal.toUpperCase() === 'Y') {
-                    c3.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDCFCE7' } };
-                    c3.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FF15803D' } };
-                } else if (resultVal.toUpperCase() === 'N') {
-                    c3.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEE2E2' } };
-                    c3.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FFB91C1C' } };
-                } else {
-                    c3.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE0F2FE' } };
-                    c3.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FF0369A1' } };
-                }
-
-                // Apply borders & font default
-                for (let c = 1; c <= 5; c++) {
-                    const cell = worksheet.getCell(currentRow, c);
-                    cell.border = borderCell;
-                    if (c !== 3) {
-                        cell.font = { name: FONT_FAMILY, size: 9.5, color: { argb: 'FF334155' } };
-                        if (isEven) cell.fill = fillZebra;
-                    }
-                }
-
-                // Process Photos
-                const imgData = await processCheckpointPhotos(imgPathStr);
-                if (imgData) {
-                    const imageId = workbook.addImage({
-                        buffer: imgData.buffer,
-                        extension: 'png'
-                    });
-
-                    worksheet.addImage(imageId, {
-                        tl: { col: 4.08, row: currentRow - 0.9 },
-                        ext: { width: imgData.widthPx, height: imgData.heightPx },
-                        editAs: 'oneCell'
-                    });
-
-                    const calcHeight = Math.max(85, Math.round((imgData.heightPx + 16) * 0.75));
-                    worksheet.getRow(currentRow).height = calcHeight;
-
-                    const neededColW = Math.round(imgData.widthPx / 7) + 4;
-                    if (neededColW > maxFotoColWidth) {
-                        maxFotoColWidth = neededColW;
-                        worksheet.getColumn(5).width = maxFotoColWidth;
-                    }
-                } else {
-                    worksheet.getRow(currentRow).height = 28;
-                    c5.value = '-';
-                }
-
-                rowCounter++;
-                currentRow++;
-            }
+        // Color Result Badge (Kolom F)
+        if (resultVal.toUpperCase() === 'Y') {
+            c6.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDCFCE7' } };
+            c6.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FF15803D' } };
+        } else if (resultVal.toUpperCase() === 'N') {
+            c6.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEE2E2' } };
+            c6.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FFB91C1C' } };
+        } else {
+            c6.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE0F2FE' } };
+            c6.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FF0369A1' } };
         }
-    }
-}
 
-/**
- * Main Generator Laporan Checkpoint YAMAHA
- * Memikulkan pembuatan Master Sheet ("Semua Area") DAN Sheet Tab terpisah per masing-masing Area!
- */
-async function generateYamahaExcel(items, areaFilter = null) {
-    const workbook = new ExcelJS.Workbook();
-
-    // Grouping item per area
-    const areaGroups = {};
-    items.forEach(item => {
-        const areaName = item.area_name || 'Area Lainnya';
-        if (!areaGroups[areaName]) areaGroups[areaName] = [];
-        areaGroups[areaName].push(item);
-    });
-
-    const uniqueAreaNames = Object.keys(areaGroups);
-
-    // 1. Buat Sheet Utama: "Semua Area" (jika areaFilter tidak dibatasi ke 1 area)
-    if (!areaFilter || areaFilter === 'ALL' || areaFilter === 'Semua Area') {
-        await buildAreaSheet(workbook, 'Semua Area', items);
-    }
-
-    // 2. Buat Sheet Tab terpisah per masing-masing Area!
-    // Ini memudahkan pengguna mengeklik Tab Area di bagian bawah Excel
-    for (const areaName of uniqueAreaNames) {
-        // Jika ada areaFilter khusus (misal user pilih "Area Showroom"), buat sheet area tersebut
-        if (areaFilter && areaFilter !== 'ALL' && areaFilter !== 'Semua Area') {
-            if (String(areaName).trim().toLowerCase() !== String(areaFilter).trim().toLowerCase()) {
-                continue; // Skip area yang tidak dipilih
+        // Apply borders & font default
+        for (let c = 1; c <= 8; c++) {
+            const cell = worksheet.getCell(currentRow, c);
+            cell.border = borderCell;
+            if (c !== 6) {
+                cell.font = { name: FONT_FAMILY, size: 9.5, color: { argb: 'FF334155' } };
+                if (isEven) cell.fill = fillZebra;
             }
         }
 
-        const sheetTitle = sanitizeSheetName(areaName);
-        const areaItems = areaGroups[areaName];
-        await buildAreaSheet(workbook, sheetTitle, areaItems);
+        // Process Photos ke Kolom 8 (H)
+        const imgData = await processCheckpointPhotos(imgPathStr);
+        if (imgData) {
+            const imageId = workbook.addImage({
+                buffer: imgData.buffer,
+                extension: 'png'
+            });
+
+            worksheet.addImage(imageId, {
+                tl: { col: 7.08, row: currentRow - 0.9 },
+                ext: { width: imgData.widthPx, height: imgData.heightPx },
+                editAs: 'oneCell'
+            });
+
+            const calcHeight = Math.max(85, Math.round((imgData.heightPx + 16) * 0.75));
+            worksheet.getRow(currentRow).height = calcHeight;
+
+            const neededColW = Math.round(imgData.widthPx / 7) + 4;
+            if (neededColW > maxFotoColWidth) {
+                maxFotoColWidth = neededColW;
+                worksheet.getColumn(8).width = maxFotoColWidth;
+            }
+        } else {
+            worksheet.getRow(currentRow).height = 28;
+            c8.value = '-';
+        }
+
+        rowCounter++;
     }
 
-    // Fallback jika tidak ada sheet yang terbentuk
-    if (workbook.worksheets.length === 0) {
-        await buildAreaSheet(workbook, 'Semua Area', items);
-    }
+    // AKTIFKAN AUTOFILTER EXCEL PADA SELURUH RENTANG TABEL (A7:H[lastRow])
+    worksheet.autoFilter = {
+        from: { row: headerRowIdx, column: 1 },
+        to: { row: currentRow, column: 8 }
+    };
 
     return await workbook.xlsx.writeBuffer();
 }

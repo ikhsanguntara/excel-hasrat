@@ -27,11 +27,14 @@ async function handleExcelGeneration(req, res, reportType = 'yamaha') {
     try {
         let items = req.body;
         let areaFilter = req.query.area || req.query.area_filter || null;
+        let sectionFilter = req.query.section || req.query.section_filter || null;
+        let subdetailFilter = req.query.subdetail || req.query.sub_section || req.query.sectiondtl || null;
 
         if (items && !Array.isArray(items) && typeof items === 'object') {
-            if (items.area_filter || items.area) {
-                areaFilter = areaFilter || items.area_filter || items.area;
-            }
+            areaFilter = areaFilter || items.area_filter || items.area;
+            sectionFilter = sectionFilter || items.section_filter || items.section;
+            subdetailFilter = subdetailFilter || items.subdetail_filter || items.subdetail;
+
             if (Array.isArray(items.data)) {
                 items = items.data;
             } else {
@@ -46,12 +49,16 @@ async function handleExcelGeneration(req, res, reportType = 'yamaha') {
             });
         }
 
-        const excelBuffer = await generateCheckpointExcel(items, reportType, areaFilter);
+        const excelBuffer = await generateCheckpointExcel(items, reportType, areaFilter, sectionFilter, subdetailFilter);
 
         const firstDoc = items[0].doc_num || 'EXPORT';
         const safeDocNum = String(firstDoc).replace(/[/\\?%*:|"<>]/g, '_');
         const formattedReportType = String(reportType).toUpperCase();
-        const areaSuffix = (areaFilter && areaFilter !== 'ALL') ? `_${String(areaFilter).replace(/[/\\?%*:|"<>]/g, '_')}` : '';
+        
+        let areaSuffix = '';
+        if (areaFilter && areaFilter !== 'ALL') areaSuffix += `_${String(areaFilter).replace(/[/\\?%*:|"<>]/g, '_')}`;
+        if (sectionFilter && sectionFilter !== 'ALL') areaSuffix += `_Sec_${String(sectionFilter).replace(/[/\\?%*:|"<>]/g, '_')}`;
+
         const filename = `Laporan_Checkpoint_${formattedReportType}${areaSuffix}_${safeDocNum}.xlsx`;
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -84,7 +91,7 @@ app.post('/api/v1/generate-excel', async (req, res) => {
     return handleExcelGeneration(req, res, 'yamaha');
 });
 
-// 404 JSON Fallback Handler (mencegah Express mengembalikan 404 HTML)
+// 404 JSON Fallback Handler
 app.use((req, res) => {
     res.status(404).json({
         error: 'Not Found',
@@ -92,7 +99,7 @@ app.use((req, res) => {
     });
 });
 
-// 500 Global Error Handler (mencegah Express mengembalikan 500 HTML)
+// 500 Global Error Handler
 app.use((err, req, res, next) => {
     console.error('Unhandled Global Error:', err);
     res.status(500).json({

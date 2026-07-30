@@ -79,17 +79,35 @@
                     </button>
                 </div>
 
-                <!-- AREA FILTER DROPDOWN -->
+                <!-- CASCADING FILTER DROPDOWNS (Area -> Section -> Sub-bagian) -->
                 <div class="filter-card-section">
-                    <label for="areaSelect" class="filter-label">
+                    <div class="filter-header-title">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
                         </svg>
-                        Filter Area Inspeksi:
-                    </label>
-                    <select id="areaSelect" class="area-select">
-                        <option value="ALL">Semua Area (All Areas)</option>
-                    </select>
+                        Filter Bertingkat Laporan (Opsional):
+                    </div>
+                    
+                    <div class="filter-grid">
+                        <div class="filter-field">
+                            <label for="areaSelect" class="filter-sublabel">1. Filter Area:</label>
+                            <select id="areaSelect" class="area-select">
+                                <option value="ALL">Semua Area (All Areas)</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="sectionSelect" class="filter-sublabel">2. Filter Section:</label>
+                            <select id="sectionSelect" class="area-select">
+                                <option value="ALL">Semua Section (All Sections)</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="subdetailSelect" class="filter-sublabel">3. Filter Sub-bagian:</label>
+                            <select id="subdetailSelect" class="area-select">
+                                <option value="ALL">Semua Sub-bagian (All)</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- STATS SUMMARY METRICS -->
