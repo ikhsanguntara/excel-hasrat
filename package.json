@@ -1,0 +1,26 @@
+{
+  "name": "excel_ai",
+  "version": "1.0.0",
+  "description": "Layanan REST API (Node.js Express) untuk menerima payload JSON berisi data checkpoint / inspeksi dan menghasilkan file Excel (.xlsx) dengan pengolahan foto seragam & grouping.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test-excel": "node test_generate_node.js"
+  },
+  "keywords": [
+    "excel",
+    "express",
+    "exceljs",
+    "sharp",
+    "checkpoint",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "sharp": "^0.33.5"
+  }
+}

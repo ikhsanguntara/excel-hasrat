@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel AI - JSON to Excel Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-glow"></div>
+
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="8" y1="13" x2="16" y2="13"/>
+                        <line x1="8" y1="17" x2="16" y2="17"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>Excel Inspection AI</h1>
+                    <p>JSON to Excel Report Converter with Image Grid</p>
+                </div>
+            </div>
+            <div class="status-badge">
+                <span class="pulse-dot"></span> API Status: Active
+            </div>
+        </header>
+
+        <!-- MAIN CARD -->
+        <main class="main-card">
+            <div class="card-header">
+                <h2>Unggah File JSON Checkpoint</h2>
+                <p>Pilih atau drag-and-drop file JSON inspeksi Anda untuk menghasilkan laporan Excel (.xlsx) ber-grouping dan rapi.</p>
+            </div>
+
+            <!-- UPLOAD DROPZONE -->
+            <div class="dropzone" id="dropzone">
+                <input type="file" id="fileInput" accept=".json,application/json" hidden>
+                <div class="dropzone-content" id="dropzoneContent">
+                    <div class="upload-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <h3>Tarik & Lepas File JSON Di Sini</h3>
+                    <p>atau <button type="button" class="btn-link" id="browseBtn">Cari File dari Komputer</button></p>
+                    <span class="file-hint">Format yang didukung: .json (Maksimal 50 MB)</span>
+                </div>
+            </div>
+
+            <!-- FILE PREVIEW & DETAILS CARD -->
+            <div class="file-preview-card hidden" id="filePreviewCard">
+                <div class="file-info">
+                    <div class="file-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                    </div>
+                    <div class="file-details">
+                        <h4 id="fileName">checkpoint_data.json</h4>
+                        <span id="fileSize">21.7 KB • 17 Checkpoint Items</span>
+                    </div>
+                    <button class="btn-remove" id="removeFileBtn" title="Hapus File">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- STATS SUMMARY METRICS -->
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <span class="metric-label">No. Dokumen</span>
+                        <span class="metric-value" id="metricDocNum">-</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Jumlah Item</span>
+                        <span class="metric-value" id="metricCount">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Jumlah Area</span>
+                        <span class="metric-value" id="metricAreas">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Product Group</span>
+                        <span class="metric-value" id="metricGroup">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="action-bar">
+                <button type="button" class="btn-secondary" id="useSampleBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    Gunakan Contoh JSON
+                </button>
+                <button type="button" class="btn-primary" id="generateBtn" disabled>
+                    <span class="btn-text">Generate & Download Excel</span>
+                    <span class="spinner hidden" id="spinner"></span>
+                </button>
+            </div>
+
+            <!-- NOTIFICATION / TOAST -->
+            <div class="toast hidden" id="toast">
+                <div class="toast-icon" id="toastIcon"></div>
+                <div class="toast-message" id="toastMessage"></div>
+            </div>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <p>Excel Checkpoint Generator • Powered by Node.js, Express, ExcelJS & Sharp</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
