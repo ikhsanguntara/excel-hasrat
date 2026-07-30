@@ -14,15 +14,24 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Serve checkpoint_data.json sample file for the UI
 app.get('/checkpoint_data.json', (req, res) => {
-    res.sendFile(path.join(__dirname, '../checkpoint_data.json'));
+    const filePath = path.join(__dirname, '../checkpoint_data.json');
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            res.status(404).json({ error: 'Not Found', message: 'File checkpoint_data.json tidak ditemukan.' });
+        }
+    });
 });
 
 // Helper function untuk handle request Excel generation
 async function handleExcelGeneration(req, res, reportType = 'yamaha') {
     try {
         let items = req.body;
+        let areaFilter = req.query.area || req.query.area_filter || null;
 
         if (items && !Array.isArray(items) && typeof items === 'object') {
+            if (items.area_filter || items.area) {
+                areaFilter = areaFilter || items.area_filter || items.area;
+            }
             if (Array.isArray(items.data)) {
                 items = items.data;
             } else {
@@ -37,12 +46,13 @@ async function handleExcelGeneration(req, res, reportType = 'yamaha') {
             });
         }
 
-        const excelBuffer = await generateCheckpointExcel(items, reportType);
+        const excelBuffer = await generateCheckpointExcel(items, reportType, areaFilter);
 
         const firstDoc = items[0].doc_num || 'EXPORT';
         const safeDocNum = String(firstDoc).replace(/[/\\?%*:|"<>]/g, '_');
         const formattedReportType = String(reportType).toUpperCase();
-        const filename = `Laporan_Checkpoint_${formattedReportType}_${safeDocNum}.xlsx`;
+        const areaSuffix = (areaFilter && areaFilter !== 'ALL') ? `_${String(areaFilter).replace(/[/\\?%*:|"<>]/g, '_')}` : '';
+        const filename = `Laporan_Checkpoint_${formattedReportType}${areaSuffix}_${safeDocNum}.xlsx`;
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
@@ -72,6 +82,23 @@ app.post('/api/v1/generate-excel/:reportType', async (req, res) => {
 // Endpoint default fallback: POST /api/v1/generate-excel
 app.post('/api/v1/generate-excel', async (req, res) => {
     return handleExcelGeneration(req, res, 'yamaha');
+});
+
+// 404 JSON Fallback Handler (mencegah Express mengembalikan 404 HTML)
+app.use((req, res) => {
+    res.status(404).json({
+        error: 'Not Found',
+        message: `Endpoint ${req.method} ${req.originalUrl} tidak ditemukan.`
+    });
+});
+
+// 500 Global Error Handler (mencegah Express mengembalikan 500 HTML)
+app.use((err, req, res, next) => {
+    console.error('Unhandled Global Error:', err);
+    res.status(500).json({
+        error: 'Internal Server Error',
+        message: err.message || 'Terjadi kesalahan internal pada server.'
+    });
 });
 
 // Start server jika dijalankan langsung

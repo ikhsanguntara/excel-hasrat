@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileNameEl = document.getElementById('fileName');
     const fileSizeEl = document.getElementById('fileSize');
     const removeFileBtn = document.getElementById('removeFileBtn');
+    const areaSelect = document.getElementById('areaSelect');
     const generateBtn = document.getElementById('generateBtn');
     const useSampleBtn = document.getElementById('useSampleBtn');
     const spinner = document.getElementById('spinner');
@@ -110,8 +111,17 @@ document.addEventListener('DOMContentLoaded', () => {
         metricDocNum.textContent = first.doc_num || '-';
         metricCount.textContent = items.length;
         
-        const areas = new Set(items.map(i => i.area_name).filter(Boolean));
-        metricAreas.textContent = areas.size > 0 ? areas.size : 1;
+        // Populate Area Filter Select Dropdown
+        const areaSet = new Set(items.map(i => i.area_name).filter(Boolean));
+        areaSelect.innerHTML = '<option value="ALL">Semua Area (All Areas)</option>';
+        areaSet.forEach(areaName => {
+            const opt = document.createElement('option');
+            opt.value = areaName;
+            opt.textContent = areaName;
+            areaSelect.appendChild(opt);
+        });
+
+        metricAreas.textContent = areaSet.size > 0 ? areaSet.size : 1;
         metricGroup.textContent = first.product_group || 'YAMAHA';
 
         filePreviewCard.classList.remove('hidden');
@@ -122,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentJsonData = null;
         currentFileName = "";
         fileInput.value = "";
+        areaSelect.innerHTML = '<option value="ALL">Semua Area (All Areas)</option>';
         filePreviewCard.classList.add('hidden');
         generateBtn.disabled = true;
         hideToast();
@@ -132,7 +143,11 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const resp = await fetch('/checkpoint_data.json');
             if (!resp.ok) {
-                throw new Error('Gagal mengambil file sampel checkpoint_data.json');
+                throw new Error(`Gagal mengambil file contoh (HTTP ${resp.status})`);
+            }
+            const contentType = resp.headers.get('content-type');
+            if (contentType && !contentType.includes('json')) {
+                throw new Error('Server mengembalikan file non-JSON (HTML 404/Page)');
             }
             const data = await resp.json();
             currentJsonData = data;
@@ -145,15 +160,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 4. Generate & Download Excel (Menggunakan /api/v1/generate-excel/yamaha)
+    // 4. Generate & Download Excel (dengan Safe Response Error Handling)
     generateBtn.addEventListener('click', async () => {
         if (!currentJsonData) return;
 
         setLoading(true);
         hideToast();
 
+        const selectedArea = areaSelect.value;
+        let apiUrl = '/api/v1/generate-excel/yamaha';
+        if (selectedArea && selectedArea !== 'ALL') {
+            apiUrl += `?area=${encodeURIComponent(selectedArea)}`;
+        }
+
         try {
-            const response = await fetch('/api/v1/generate-excel/yamaha', {
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -162,8 +183,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(errData.message || 'Gagal generate file Excel.');
+                let errMsg = `HTTP Status ${response.status}: ${response.statusText}`;
+                try {
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        const errData = await response.json();
+                        errMsg = errData.message || errData.error || errMsg;
+                    } else {
+                        const text = await response.text();
+                        if (text && !text.includes('<!DOCTYPE')) {
+                            errMsg = text.substring(0, 150);
+                        }
+                    }
+                } catch (e) {
+                    // Ignore parse error fallback
+                }
+                throw new Error(errMsg);
             }
 
             // Ambil filename dari Header Content-Disposition jika ada
