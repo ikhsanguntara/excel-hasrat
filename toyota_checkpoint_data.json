@@ -1,0 +1,89 @@
+[
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 1,
+        "name": "Monumen",
+        "items": [
+          {
+            "checkPoint": "Keberadaan Monumen (kondisi terhalang)",
+            "hasilPenilaian": "O",
+            "hasilFoto": "hororupload/section/27/39/1/1/1a5ef152-f736-4bc6-ab10-e29869dbd10e.jpg,hororupload/section/27/39/1/1/7b1d9b8d-ef3f-4e0c-ba42-1c951a757790.jpg",
+            "solution": "Cukup dibersihkan"
+          },
+          {
+            "checkPoint": "Kebersihan",
+            "hasilPenilaian": "X",
+            "hasilFoto": "hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg",
+            "solution": "Pengajuan PP - Barang Pengadaan"
+          },
+          {
+            "checkPoint": "Kondisi Logo & huruf",
+            "hasilPenilaian": "X",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Rusak"
+          },
+          {
+            "checkPoint": "Kondisi lampu Logo & huruf",
+            "hasilPenilaian": "X",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 2,
+        "name": "Fascia",
+        "items": [
+          {
+            "checkPoint": "Kebersihan",
+            "hasilPenilaian": "X",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan"
+          },
+          {
+            "checkPoint": "Kondisi Logo & huruf",
+            "hasilPenilaian": "X",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan"
+          },
+          {
+            "checkPoint": "Kondisi lampu Logo & huruf",
+            "hasilPenilaian": "X",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Rusak"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 3,
+        "name": "Pintu Masuk Utama",
+        "items": [
+          {
+            "checkPoint": "Kondisi Permukaan Jalan",
+            "hasilPenilaian": "O",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan"
+          },
+          {
+            "checkPoint": "Sign \"MASUK & KELUAR\"",
+            "hasilPenilaian": "∆",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,12 +1,13 @@
 const { generateYamahaExcel } = require('./yamahaGenerator');
+const { generateToyotaExcel } = require('./toyotaGenerator');
 
 /**
  * Registry untuk menyimpan berbagai jenis generator laporan Excel.
- * Jika di masa depan ada format baru (misal: 'honda', 'toyota'), 
- * developer cukup menambahkan file generator baru di folder `src/generators/` dan mengdaftarkannya di sini.
+ * Mendukung format: 'yamaha', 'toyota', dan 'default'.
  */
 const generatorRegistry = {
     'yamaha': generateYamahaExcel,
+    'toyota': generateToyotaExcel,
     'default': generateYamahaExcel
 };
 

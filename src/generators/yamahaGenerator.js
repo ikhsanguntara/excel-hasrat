@@ -2,24 +2,14 @@ const ExcelJS = require('exceljs');
 const { processCheckpointPhotos } = require('../imageHandler');
 
 /**
- * Generator Laporan Checkpoint YAMAHA (Native Excel AutoFilter Ready)
- * - Murni Tanpa Merged Cell di dalam Body Data Tabel sehingga AutoFilter bawaan Excel [▼] 
- *   bekerja 100% SEMPURNA untuk menyaring Area, Section, maupun Sub-bagian secara langsung di Microsoft Excel.
- * 
- * Kolom Tabel (8 Kolom):
- *   A: No
- *   B: Area             <-- Filter Dropdown Excel [▼]
- *   C: Section          <-- Filter Dropdown Excel [▼]
- *   D: Sub-bagian       <-- Filter Dropdown Excel [▼]
- *   E: Pertanyaan Checkpoint
- *   F: Hasil
- *   G: Waktu Cek
- *   H: Foto Lampiran
+ * Generator Laporan Checkpoint YAMAHA (1 Row Flat Table tanpa Merged Banner)
+ * - 8 Kolom Lengkap: No, Area, Section, Sub-bagian, Pertanyaan Checkpoint, Hasil, Waktu Cek, Foto Lampiran.
+ * - Foto berukuran Besar & Wide (220x150 px) tanpa gepeng/terdistorsi.
  */
 async function generateYamahaExcel(items, areaFilter = null, sectionFilter = null, subdetailFilter = null) {
     let filteredItems = items;
 
-    // 1. Filter per Area jika ditentukan dari UI/API
+    // 1. Filter per Area jika ditentukan
     if (areaFilter && areaFilter !== 'ALL' && areaFilter !== 'Semua Area') {
         filteredItems = filteredItems.filter(item => {
             const area = String(item.area_name || '').trim().toLowerCase();
@@ -44,7 +34,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
     }
 
     if (!filteredItems || filteredItems.length === 0) {
-        filteredItems = items; // Fallback jika filter tidak menghasilkan data
+        filteredItems = items; // Fallback
     }
 
     const workbook = new ExcelJS.Workbook();
@@ -56,9 +46,8 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
 
     const FONT_FAMILY = 'Segoe UI';
 
-    // Palet Warna Slate Executive
+    const fillHeaderGray = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE2E8F0' } };  // Header Light Gray
     const fillTitle = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };
-    const fillTh = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF334155' } };
     const fillZebra = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
 
     const borderCell = {
@@ -81,14 +70,14 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
     if (subdetailFilter && subdetailFilter !== 'ALL') filterSubtitle.push(`Sub: ${subdetailFilter}`);
     
     const bannerText = filterSubtitle.length > 0
-        ? `  LAPORAN HASIL CHECKPOINT & INSPEKSI (YAMAHA) [${filterSubtitle.join(' | ')}]`
-        : '  LAPORAN HASIL CHECKPOINT & INSPEKSI (YAMAHA)';
+        ? `  List Kondisi Fasilitas Cabang - YAMAHA [${filterSubtitle.join(' | ')}]`
+        : '  List Kondisi Fasilitas Cabang - YAMAHA';
 
     titleCell.value = bannerText;
-    titleCell.font = { name: FONT_FAMILY, size: 15, bold: true, color: { argb: 'FFFFFFFF' } };
+    titleCell.font = { name: FONT_FAMILY, size: 14, bold: true, color: { argb: 'FFFFFFFF' } };
     titleCell.fill = fillTitle;
     titleCell.alignment = { horizontal: 'left', vertical: 'middle' };
-    worksheet.getRow(1).height = 40;
+    worksheet.getRow(1).height = 36;
 
     // --- 2. HEADER RINGKASAN METADATA DOKUMEN ---
     const firstItem = (filteredItems && filteredItems.length > 0) ? filteredItems[0] : {};
@@ -107,60 +96,59 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
 
     metaInfo.forEach((row, idx) => {
         const rowIdx = idx + 3;
-        worksheet.getRow(rowIdx).height = 20;
+        worksheet.getRow(rowIdx).height = 18;
 
         const cL1 = worksheet.getCell(`A${rowIdx}`);
         cL1.value = row[0];
-        cL1.font = { name: FONT_FAMILY, size: 9.5, bold: true, color: { argb: 'FF475569' } };
+        cL1.font = { name: FONT_FAMILY, size: 9, bold: true, color: { argb: 'FF475569' } };
         cL1.alignment = alignLeft;
 
         const cV1 = worksheet.getCell(`B${rowIdx}`);
         cV1.value = row[1];
-        cV1.font = { name: FONT_FAMILY, size: 9.5, color: { argb: 'FF0F172A' } };
+        cV1.font = { name: FONT_FAMILY, size: 9, color: { argb: 'FF0F172A' } };
         cV1.alignment = alignLeft;
 
         const cL2 = worksheet.getCell(`D${rowIdx}`);
         cL2.value = row[2];
-        cL2.font = { name: FONT_FAMILY, size: 9.5, bold: true, color: { argb: 'FF475569' } };
+        cL2.font = { name: FONT_FAMILY, size: 9, bold: true, color: { argb: 'FF475569' } };
         cL2.alignment = alignLeft;
 
         const cV2 = worksheet.getCell(`E${rowIdx}`);
         cV2.value = row[3];
-        cV2.font = { name: FONT_FAMILY, size: 9.5, color: { argb: 'FF0F172A' } };
+        cV2.font = { name: FONT_FAMILY, size: 9, color: { argb: 'FF0F172A' } };
         cV2.alignment = alignLeft;
     });
 
     let currentRow = 7;
 
-    // --- 3. HEADER TABEL DATA DENGAN AUTOFILTER EXCEL (8 KOLOM) ---
+    // --- 3. HEADER TABEL DATA YAMAHA (8 KOLOM MURNI) ---
     const headers = [
         { header: 'No', key: 'no', width: 6 },
         { header: 'Area', key: 'area', width: 22 },
         { header: 'Section', key: 'section', width: 20 },
         { header: 'Sub-bagian', key: 'subdetail', width: 24 },
-        { header: 'Pertanyaan Checkpoint', key: 'question', width: 48 },
+        { header: 'Pertanyaan Checkpoint', key: 'question', width: 44 },
         { header: 'Hasil', key: 'result', width: 14 },
-        { header: 'Waktu Cek', key: 'date', width: 22 },
-        { header: 'Foto Lampiran', key: 'photo', width: 55 }
+        { header: 'Waktu Cek', key: 'date', width: 20 },
+        { header: 'Foto Lampiran', key: 'photo', width: 75 }
     ];
 
-    worksheet.getRow(currentRow).height = 28;
+    worksheet.getRow(currentRow).height = 26;
     headers.forEach((h, colIdx) => {
         const colNum = colIdx + 1;
         const cell = worksheet.getCell(currentRow, colNum);
         cell.value = h.header;
-        cell.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
-        cell.fill = fillTh;
+        cell.fill = fillHeaderGray;
+        cell.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FF1E293B' } };
         cell.alignment = alignCenter;
         cell.border = borderCell;
         worksheet.getColumn(colNum).width = h.width;
     });
 
-    // POPULASI DATA BARIS (TANPA MERGED ROW AGAR AUTOFILTER EXCEL 100% BEKERJA KELAS DUNIAS)
     const headerRowIdx = currentRow;
 
     let rowCounter = 1;
-    let maxFotoColWidth = 55;
+    let maxFotoColWidth = 75;
 
     for (let idx = 0; idx < filteredItems.length; idx++) {
         currentRow++;
@@ -175,9 +163,8 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         const imgPathStr = item.img_path || '';
 
         const isEven = (rowCounter % 2 === 0);
-        worksheet.getRow(currentRow).height = 28;
 
-        // Set Cell Values (8 Kolom Murni Tanpa Merged Cells)
+        // Set Cell Values (8 Kolom)
         const c1 = worksheet.getCell(currentRow, 1); c1.value = rowCounter; c1.alignment = alignCenter;
         const c2 = worksheet.getCell(currentRow, 2); c2.value = areaName; c2.alignment = alignCenter;
         const c3 = worksheet.getCell(currentRow, 3); c3.value = sectionName; c3.alignment = alignCenter;
@@ -187,7 +174,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         const c7 = worksheet.getCell(currentRow, 7); c7.value = secDate; c7.alignment = alignCenter;
         const c8 = worksheet.getCell(currentRow, 8); c8.alignment = alignCenter;
 
-        // Color Result Badge (Kolom F)
+        // Color Result Badge
         if (resultVal.toUpperCase() === 'Y') {
             c6.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDCFCE7' } };
             c6.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FF15803D' } };
@@ -209,7 +196,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
             }
         }
 
-        // Process Photos ke Kolom 8 (H)
+        // Process Photos ke Kolom 8 (H -> 0-index 7)
         const imgData = await processCheckpointPhotos(imgPathStr);
         if (imgData) {
             const imageId = workbook.addImage({
@@ -217,20 +204,21 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
                 extension: 'png'
             });
 
+            const neededColW = Math.round(imgData.widthPx / 7) + 6;
+            if (neededColW > maxFotoColWidth) {
+                maxFotoColWidth = neededColW;
+            }
+            worksheet.getColumn(8).width = maxFotoColWidth;
+
+            const calcHeight = Math.max(130, Math.round((imgData.heightPx + 20) * 0.75));
+            worksheet.getRow(currentRow).height = calcHeight;
+
+            const rZero = currentRow - 1;
             worksheet.addImage(imageId, {
-                tl: { col: 7.08, row: currentRow - 0.9 },
+                tl: { col: 7.04, row: rZero + 0.04 },
                 ext: { width: imgData.widthPx, height: imgData.heightPx },
                 editAs: 'oneCell'
             });
-
-            const calcHeight = Math.max(85, Math.round((imgData.heightPx + 16) * 0.75));
-            worksheet.getRow(currentRow).height = calcHeight;
-
-            const neededColW = Math.round(imgData.widthPx / 7) + 4;
-            if (neededColW > maxFotoColWidth) {
-                maxFotoColWidth = neededColW;
-                worksheet.getColumn(8).width = maxFotoColWidth;
-            }
         } else {
             worksheet.getRow(currentRow).height = 28;
             c8.value = '-';
@@ -239,7 +227,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         rowCounter++;
     }
 
-    // AKTIFKAN AUTOFILTER EXCEL PADA SELURUH RENTANG TABEL (A7:H[lastRow])
+    // AUTOFILTER EXCEL AKTIF PADA RANGE A7:H[lastRow]
     worksheet.autoFilter = {
         from: { row: headerRowIdx, column: 1 },
         to: { row: currentRow, column: 8 }

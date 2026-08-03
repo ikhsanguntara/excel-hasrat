@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel AI - JSON to Excel Generator</title>
+    <title>Excel AI - JSON to Excel Generator (Yamaha & Toyota)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
                 </div>
                 <div class="brand-text">
                     <h1>Excel Inspection AI</h1>
-                    <p>JSON to Excel Report Converter with Image Grid</p>
+                    <p>JSON to Excel Report Converter (Yamaha & Toyota)</p>
                 </div>
             </div>
             <div class="status-badge">
@@ -39,6 +39,21 @@
             <div class="card-header">
                 <h2>Unggah File JSON Checkpoint</h2>
                 <p>Pilih atau drag-and-drop file JSON inspeksi Anda untuk menghasilkan laporan Excel (.xlsx) ber-grouping dan rapi.</p>
+            </div>
+
+            <!-- TIPE LAPORAN SELECTOR -->
+            <div class="report-type-selector">
+                <label class="selector-label">Format Laporan:</label>
+                <div class="toggle-group">
+                    <button type="button" class="toggle-btn active" id="btnTypeYamaha" data-type="yamaha">
+                        <span class="brand-badge yamaha">YAMAHA</span>
+                        Laporan Yamaha
+                    </button>
+                    <button type="button" class="toggle-btn" id="btnTypeToyota" data-type="toyota">
+                        <span class="brand-badge toyota">TOYOTA</span>
+                        Laporan Toyota
+                    </button>
+                </div>
             </div>
 
             <!-- UPLOAD DROPZONE -->
@@ -79,7 +94,7 @@
                     </button>
                 </div>
 
-                <!-- CASCADING FILTER DROPDOWNS (Area -> Section -> Sub-bagian) -->
+                <!-- CASCADING FILTER DROPDOWNS -->
                 <div class="filter-card-section">
                     <div class="filter-header-title">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -126,7 +141,7 @@
                     </div>
                     <div class="metric-item">
                         <span class="metric-label">Product Group</span>
-                        <span class="metric-value" id="metricGroup">-</span>
+                        <span class="metric-value" id="metricGroup">YAMAHA</span>
                     </div>
                 </div>
             </div>
@@ -137,7 +152,7 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                     </svg>
-                    Gunakan Contoh JSON
+                    <span id="sampleBtnText">Gunakan Contoh JSON Yamaha</span>
                 </button>
                 <button type="button" class="btn-primary" id="generateBtn" disabled>
                     <span class="btn-text">Generate & Download Excel</span>

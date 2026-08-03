@@ -12,12 +12,22 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 // Serve static frontend UI files from public/
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Serve checkpoint_data.json sample file for the UI
+// Serve checkpoint_data.json sample file for Yamaha
 app.get('/checkpoint_data.json', (req, res) => {
     const filePath = path.join(__dirname, '../checkpoint_data.json');
     res.sendFile(filePath, (err) => {
         if (err) {
             res.status(404).json({ error: 'Not Found', message: 'File checkpoint_data.json tidak ditemukan.' });
+        }
+    });
+});
+
+// Serve toyota_checkpoint_data.json sample file for Toyota
+app.get('/toyota_checkpoint_data.json', (req, res) => {
+    const filePath = path.join(__dirname, '../toyota_checkpoint_data.json');
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            res.status(404).json({ error: 'Not Found', message: 'File toyota_checkpoint_data.json tidak ditemukan.' });
         }
     });
 });
@@ -51,13 +61,12 @@ async function handleExcelGeneration(req, res, reportType = 'yamaha') {
 
         const excelBuffer = await generateCheckpointExcel(items, reportType, areaFilter, sectionFilter, subdetailFilter);
 
-        const firstDoc = items[0].doc_num || 'EXPORT';
+        const firstDoc = items[0]?.doc_num || items[0]?.name || 'EXPORT';
         const safeDocNum = String(firstDoc).replace(/[/\\?%*:|"<>]/g, '_');
         const formattedReportType = String(reportType).toUpperCase();
         
         let areaSuffix = '';
         if (areaFilter && areaFilter !== 'ALL') areaSuffix += `_${String(areaFilter).replace(/[/\\?%*:|"<>]/g, '_')}`;
-        if (sectionFilter && sectionFilter !== 'ALL') areaSuffix += `_Sec_${String(sectionFilter).replace(/[/\\?%*:|"<>]/g, '_')}`;
 
         const filename = `Laporan_Checkpoint_${formattedReportType}${areaSuffix}_${safeDocNum}.xlsx`;
 
@@ -75,9 +84,14 @@ async function handleExcelGeneration(req, res, reportType = 'yamaha') {
     }
 }
 
-// Endpoint spesifik untuk YAMAHA: POST /api/v1/generate-excel/yamaha
+// Endpoint spesifik YAMAHA: POST /api/v1/generate-excel/yamaha
 app.post('/api/v1/generate-excel/yamaha', async (req, res) => {
     return handleExcelGeneration(req, res, 'yamaha');
+});
+
+// Endpoint spesifik TOYOTA: POST /api/v1/generate-excel/toyota
+app.post('/api/v1/generate-excel/toyota', async (req, res) => {
+    return handleExcelGeneration(req, res, 'toyota');
 });
 
 // Endpoint dinamis untuk tipe report lain: POST /api/v1/generate-excel/:reportType
@@ -113,6 +127,7 @@ if (require.main === module) {
     app.listen(PORT, () => {
         console.log(`🚀 Node.js Express API & Web UI running on http://localhost:${PORT}`);
         console.log(`📌 Yamaha Endpoint: POST http://localhost:${PORT}/api/v1/generate-excel/yamaha`);
+        console.log(`📌 Toyota Endpoint: POST http://localhost:${PORT}/api/v1/generate-excel/toyota`);
     });
 }
 
