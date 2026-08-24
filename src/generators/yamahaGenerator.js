@@ -83,7 +83,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
     const firstItem = (filteredItems && filteredItems.length > 0) ? filteredItems[0] : {};
     const docNum = firstItem.doc_num || '-';
     const docDate = firstItem.doc_date || '-';
-    const checkUser = firstItem.checked_by || firstItem.check_user || firstItem.section_user || firstItem.created_user || '-';
+    const checkUser = firstItem.check_user_name || firstItem.checked_by_name || firstItem.checked_by || firstItem.check_user || firstItem.section_user_name || firstItem.section_user || firstItem.created_user || '-';
     const productGroup = firstItem.product_group || 'YAMAHA';
     const startDate = firstItem.start_doc_date || '-';
     const endDate = firstItem.end_doc_date || '-';
@@ -129,7 +129,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         { header: 'Sub-bagian', key: 'subdetail', width: 24 },
         { header: 'Pertanyaan Checkpoint', key: 'question', width: 44 },
         { header: 'Hasil', key: 'result', width: 14 },
-        { header: 'Checked By', key: 'checked_by', width: 18 },
+        { header: 'Checked By', key: 'checked_by', width: 22 },
         { header: 'Waktu Cek', key: 'date', width: 20 },
         { header: 'Foto Lampiran', key: 'photo', width: 75 }
     ];
@@ -160,7 +160,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         const subDtlName = item.sectiondtl_name || '-';
         const cpName = item.checkpoint_name || '';
         const resultVal = String(item.result || '').trim();
-        const checkedByVal = item.checked_by || item.check_user || item.section_user || item.created_user || '-';
+        const checkedByVal = item.check_user_name || item.checked_by_name || item.checked_by || item.check_user || item.section_user_name || item.section_user || item.created_user || '-';
         const secDate = item.section_date || item.doc_date || '-';
         const imgPathStr = item.img_path || '';
 

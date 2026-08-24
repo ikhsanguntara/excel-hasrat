@@ -30,7 +30,7 @@ function normalizeToyotaData(rawPayload) {
                 sectiondtl_name: entry.sectiondtl_name || '',
                 checkpoint_name: entry.checkpoint_name || entry.checkPoint || '',
                 result: entry.result || entry.hasilPenilaian || '',
-                checked_by: entry.checked_by || entry.check_user || entry.section_user || entry.created_user || '-',
+                checked_by: entry.check_user_name || entry.checked_by_name || entry.checked_by || entry.check_user || entry.section_user_name || entry.section_user || entry.created_user || '-',
                 section_date: entry.section_date || entry.doc_date || entry.created_date || '-',
                 solution: entry.solution || entry.solusi || '',
                 img_path: entry.img_path || entry.hasilFoto || entry.hasil_foto || entry.img || entry.foto || entry.image || entry.image_path || entry.path_foto || ''
@@ -49,7 +49,7 @@ function normalizeToyotaData(rawPayload) {
 
             items.forEach(it => {
                 const imgRef = it.img_path || it.hasilFoto || it.hasil_foto || it.img || it.foto || it.image || it.image_path || it.path_foto || '';
-                const checkUserVal = it.checked_by || it.check_user || it.section_user || it.created_user || entry.check_user || '-';
+                const checkUserVal = it.check_user_name || it.checked_by_name || it.checked_by || it.check_user || it.section_user_name || it.section_user || it.created_user || entry.check_user_name || entry.check_user || '-';
                 const checkDateVal = it.section_date || it.doc_date || it.created_date || entry.doc_date || '-';
 
                 itemsArray.push({
@@ -147,7 +147,7 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
     const firstItem = (filteredItems && filteredItems.length > 0) ? filteredItems[0] : {};
     const docNum = firstItem.doc_num || 'TYT/' + new Date().getFullYear() + '/001';
     const docDate = firstItem.doc_date || new Date().toISOString().split('T')[0];
-    const checkUser = firstItem.checked_by || firstItem.check_user || firstItem.section_user || 'Auditor Toyota';
+    const checkUser = firstItem.check_user_name || firstItem.checked_by_name || firstItem.checked_by || firstItem.check_user || firstItem.section_user_name || firstItem.section_user || 'Auditor Toyota';
 
     const metaInfo = [
         ['No. Dokumen', docNum, 'Product Group', 'TOYOTA'],
@@ -189,7 +189,7 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
         { header: 'Section', key: 'section', width: 22 },
         { header: 'Check Points', key: 'question', width: 44 },
         { header: 'Hasil Penilaian', key: 'result', width: 14 },
-        { header: 'Checked By', key: 'checked_by', width: 18 },
+        { header: 'Checked By', key: 'checked_by', width: 22 },
         { header: 'Waktu Cek', key: 'date', width: 20 },
         { header: 'Hasil Foto', key: 'photo', width: 75 },
         { header: 'Solusion', key: 'solution', width: 34 }
@@ -239,7 +239,7 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
         const sectionName = item.section_name || 'Section Umum';
         const cpName = item.checkpoint_name || '';
         const resultVal = String(item.result || '').trim();
-        const checkedByVal = item.checked_by || item.check_user || item.section_user || '-';
+        const checkedByVal = item.checked_by || item.check_user_name || item.check_user || item.section_user || '-';
         const secDate = item.section_date || item.doc_date || '-';
         const solutionText = String(item.solution || '').trim();
         const imgPathStr = item.img_path || item.hasilFoto || item.hasil_foto || item.img || item.foto || '';
