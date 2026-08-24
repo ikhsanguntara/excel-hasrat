@@ -3,7 +3,7 @@ const { processCheckpointPhotos } = require('../imageHandler');
 
 /**
  * Generator Laporan Checkpoint YAMAHA (1 Row Flat Table tanpa Merged Banner)
- * - 8 Kolom Lengkap: No, Area, Section, Sub-bagian, Pertanyaan Checkpoint, Hasil, Waktu Cek, Foto Lampiran.
+ * - 9 Kolom Lengkap: No, Area, Section, Sub-bagian, Pertanyaan Checkpoint, Hasil, Checked By, Waktu Cek, Foto Lampiran.
  * - Foto berukuran Besar & Wide (220x150 px) tanpa gepeng/terdistorsi.
  */
 async function generateYamahaExcel(items, areaFilter = null, sectionFilter = null, subdetailFilter = null) {
@@ -60,8 +60,8 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
     const alignCenter = { horizontal: 'center', vertical: 'middle', wrapText: true };
     const alignLeft = { horizontal: 'left', vertical: 'middle', wrapText: true };
 
-    // --- 1. BANNER JUDUL YAMAHA (Merged A1:H1) ---
-    worksheet.mergeCells('A1:H1');
+    // --- 1. BANNER JUDUL YAMAHA (Merged A1:I1) ---
+    worksheet.mergeCells('A1:I1');
     const titleCell = worksheet.getCell('A1');
     
     let filterSubtitle = [];
@@ -83,7 +83,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
     const firstItem = (filteredItems && filteredItems.length > 0) ? filteredItems[0] : {};
     const docNum = firstItem.doc_num || '-';
     const docDate = firstItem.doc_date || '-';
-    const checkUser = firstItem.check_user || '-';
+    const checkUser = firstItem.checked_by || firstItem.check_user || firstItem.section_user || firstItem.created_user || '-';
     const productGroup = firstItem.product_group || 'YAMAHA';
     const startDate = firstItem.start_doc_date || '-';
     const endDate = firstItem.end_doc_date || '-';
@@ -121,7 +121,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
 
     let currentRow = 7;
 
-    // --- 3. HEADER TABEL DATA YAMAHA (8 KOLOM MURNI) ---
+    // --- 3. HEADER TABEL DATA YAMAHA (9 KOLOM MURNI) ---
     const headers = [
         { header: 'No', key: 'no', width: 6 },
         { header: 'Area', key: 'area', width: 22 },
@@ -129,6 +129,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         { header: 'Sub-bagian', key: 'subdetail', width: 24 },
         { header: 'Pertanyaan Checkpoint', key: 'question', width: 44 },
         { header: 'Hasil', key: 'result', width: 14 },
+        { header: 'Checked By', key: 'checked_by', width: 18 },
         { header: 'Waktu Cek', key: 'date', width: 20 },
         { header: 'Foto Lampiran', key: 'photo', width: 75 }
     ];
@@ -159,20 +160,22 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         const subDtlName = item.sectiondtl_name || '-';
         const cpName = item.checkpoint_name || '';
         const resultVal = String(item.result || '').trim();
-        const secDate = item.section_date || '';
+        const checkedByVal = item.checked_by || item.check_user || item.section_user || item.created_user || '-';
+        const secDate = item.section_date || item.doc_date || '-';
         const imgPathStr = item.img_path || '';
 
         const isEven = (rowCounter % 2 === 0);
 
-        // Set Cell Values (8 Kolom)
+        // Set Cell Values (9 Kolom)
         const c1 = worksheet.getCell(currentRow, 1); c1.value = rowCounter; c1.alignment = alignCenter;
         const c2 = worksheet.getCell(currentRow, 2); c2.value = areaName; c2.alignment = alignCenter;
         const c3 = worksheet.getCell(currentRow, 3); c3.value = sectionName; c3.alignment = alignCenter;
         const c4 = worksheet.getCell(currentRow, 4); c4.value = subDtlName; c4.alignment = alignCenter;
         const c5 = worksheet.getCell(currentRow, 5); c5.value = cpName; c5.alignment = alignLeft;
         const c6 = worksheet.getCell(currentRow, 6); c6.value = resultVal; c6.alignment = alignCenter;
-        const c7 = worksheet.getCell(currentRow, 7); c7.value = secDate; c7.alignment = alignCenter;
-        const c8 = worksheet.getCell(currentRow, 8); c8.alignment = alignCenter;
+        const c7 = worksheet.getCell(currentRow, 7); c7.value = checkedByVal; c7.alignment = alignCenter;
+        const c8 = worksheet.getCell(currentRow, 8); c8.value = secDate; c8.alignment = alignCenter;
+        const c9 = worksheet.getCell(currentRow, 9); c9.alignment = alignCenter;
 
         // Color Result Badge
         if (resultVal.toUpperCase() === 'Y') {
@@ -187,16 +190,16 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         }
 
         // Apply borders & font default
-        for (let c = 1; c <= 8; c++) {
+        for (let c = 1; c <= 9; c++) {
             const cell = worksheet.getCell(currentRow, c);
             cell.border = borderCell;
-            if (c !== 6) {
+            if (c !== 6) { // Kecuali kolom hasil (F)
                 cell.font = { name: FONT_FAMILY, size: 9.5, color: { argb: 'FF334155' } };
                 if (isEven) cell.fill = fillZebra;
             }
         }
 
-        // Process Photos ke Kolom 8 (H -> 0-index 7)
+        // Process Photos ke Kolom 9 (I -> 0-index 8)
         const imgData = await processCheckpointPhotos(imgPathStr);
         if (imgData) {
             const imageId = workbook.addImage({
@@ -208,29 +211,29 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
             if (neededColW > maxFotoColWidth) {
                 maxFotoColWidth = neededColW;
             }
-            worksheet.getColumn(8).width = maxFotoColWidth;
+            worksheet.getColumn(9).width = maxFotoColWidth;
 
             const calcHeight = Math.max(130, Math.round((imgData.heightPx + 20) * 0.75));
             worksheet.getRow(currentRow).height = calcHeight;
 
             const rZero = currentRow - 1;
             worksheet.addImage(imageId, {
-                tl: { col: 7.04, row: rZero + 0.04 },
+                tl: { col: 8.04, row: rZero + 0.04 },
                 ext: { width: imgData.widthPx, height: imgData.heightPx },
                 editAs: 'oneCell'
             });
         } else {
             worksheet.getRow(currentRow).height = 28;
-            c8.value = '-';
+            c9.value = '-';
         }
 
         rowCounter++;
     }
 
-    // AUTOFILTER EXCEL AKTIF PADA RANGE A7:H[lastRow]
+    // AUTOFILTER EXCEL AKTIF PADA RANGE A7:I[lastRow]
     worksheet.autoFilter = {
         from: { row: headerRowIdx, column: 1 },
-        to: { row: currentRow, column: 8 }
+        to: { row: currentRow, column: 9 }
     };
 
     return await workbook.xlsx.writeBuffer();
