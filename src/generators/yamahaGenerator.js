@@ -3,7 +3,7 @@ const { processCheckpointPhotos } = require('../imageHandler');
 
 /**
  * Generator Laporan Checkpoint YAMAHA (1 Row Flat Table tanpa Merged Banner)
- * - 9 Kolom Lengkap: No, Area, Section, Sub-bagian, Pertanyaan Checkpoint, Hasil, Checked By, Waktu Cek, Foto Lampiran.
+ * - 10 Kolom Lengkap: No, Area, Section, Sub-bagian, Pertanyaan Checkpoint, Hasil, Checked By, Waktu Cek, Foto Lampiran, Solusion.
  * - Foto berukuran Besar & Wide (220x150 px) tanpa gepeng/terdistorsi.
  */
 async function generateYamahaExcel(items, areaFilter = null, sectionFilter = null, subdetailFilter = null) {
@@ -47,6 +47,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
     const FONT_FAMILY = 'Segoe UI';
 
     const fillHeaderGray = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE2E8F0' } };  // Header Light Gray
+    const fillHeaderGreen = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFC6EFCE' } }; // Light Green Solusion Header
     const fillTitle = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };
     const fillZebra = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
 
@@ -60,8 +61,8 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
     const alignCenter = { horizontal: 'center', vertical: 'middle', wrapText: true };
     const alignLeft = { horizontal: 'left', vertical: 'middle', wrapText: true };
 
-    // --- 1. BANNER JUDUL YAMAHA (Merged A1:I1) ---
-    worksheet.mergeCells('A1:I1');
+    // --- 1. BANNER JUDUL YAMAHA (Merged A1:J1) ---
+    worksheet.mergeCells('A1:J1');
     const titleCell = worksheet.getCell('A1');
     
     let filterSubtitle = [];
@@ -121,7 +122,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
 
     let currentRow = 7;
 
-    // --- 3. HEADER TABEL DATA YAMAHA (9 KOLOM MURNI) ---
+    // --- 3. HEADER TABEL DATA YAMAHA (10 KOLOM MURNI) ---
     const headers = [
         { header: 'No', key: 'no', width: 6 },
         { header: 'Area', key: 'area', width: 22 },
@@ -131,7 +132,8 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         { header: 'Hasil', key: 'result', width: 14 },
         { header: 'Checked By', key: 'checked_by', width: 22 },
         { header: 'Waktu Cek', key: 'date', width: 20 },
-        { header: 'Foto Lampiran', key: 'photo', width: 75 }
+        { header: 'Foto Lampiran', key: 'photo', width: 75 },
+        { header: 'Solusion', key: 'solution', width: 34 }
     ];
 
     worksheet.getRow(currentRow).height = 26;
@@ -139,11 +141,17 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         const colNum = colIdx + 1;
         const cell = worksheet.getCell(currentRow, colNum);
         cell.value = h.header;
-        cell.fill = fillHeaderGray;
-        cell.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FF1E293B' } };
         cell.alignment = alignCenter;
         cell.border = borderCell;
         worksheet.getColumn(colNum).width = h.width;
+
+        if (h.key === 'solution') {
+            cell.fill = fillHeaderGreen;
+            cell.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FF006100' } };
+        } else {
+            cell.fill = fillHeaderGray;
+            cell.font = { name: FONT_FAMILY, size: 10, bold: true, color: { argb: 'FF1E293B' } };
+        }
     });
 
     const headerRowIdx = currentRow;
@@ -162,11 +170,12 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         const resultVal = String(item.result || '').trim();
         const checkedByVal = item.check_user_name || item.checked_by_name || item.checked_by || item.check_user || item.section_user_name || item.section_user || item.created_user || '-';
         const secDate = item.section_date || item.doc_date || '-';
+        const solutionText = String(item.solution || item.solusi || '').trim();
         const imgPathStr = item.img_path || '';
 
         const isEven = (rowCounter % 2 === 0);
 
-        // Set Cell Values (9 Kolom)
+        // Set Cell Values (10 Kolom)
         const c1 = worksheet.getCell(currentRow, 1); c1.value = rowCounter; c1.alignment = alignCenter;
         const c2 = worksheet.getCell(currentRow, 2); c2.value = areaName; c2.alignment = alignCenter;
         const c3 = worksheet.getCell(currentRow, 3); c3.value = sectionName; c3.alignment = alignCenter;
@@ -176,6 +185,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         const c7 = worksheet.getCell(currentRow, 7); c7.value = checkedByVal; c7.alignment = alignCenter;
         const c8 = worksheet.getCell(currentRow, 8); c8.value = secDate; c8.alignment = alignCenter;
         const c9 = worksheet.getCell(currentRow, 9); c9.alignment = alignCenter;
+        const c10 = worksheet.getCell(currentRow, 10); c10.value = solutionText || '-'; c10.alignment = alignLeft;
 
         // Color Result Badge
         if (resultVal.toUpperCase() === 'Y') {
@@ -190,7 +200,7 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         }
 
         // Apply borders & font default
-        for (let c = 1; c <= 9; c++) {
+        for (let c = 1; c <= 10; c++) {
             const cell = worksheet.getCell(currentRow, c);
             cell.border = borderCell;
             if (c !== 6) { // Kecuali kolom hasil (F)
@@ -230,10 +240,10 @@ async function generateYamahaExcel(items, areaFilter = null, sectionFilter = nul
         rowCounter++;
     }
 
-    // AUTOFILTER EXCEL AKTIF PADA RANGE A7:I[lastRow]
+    // AUTOFILTER EXCEL AKTIF PADA RANGE A7:J[lastRow]
     worksheet.autoFilter = {
         from: { row: headerRowIdx, column: 1 },
-        to: { row: currentRow, column: 9 }
+        to: { row: currentRow, column: 10 }
     };
 
     return await workbook.xlsx.writeBuffer();
