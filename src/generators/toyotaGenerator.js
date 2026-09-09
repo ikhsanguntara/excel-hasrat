@@ -192,7 +192,7 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
         { header: 'Checked By', key: 'checked_by', width: 22 },
         { header: 'Waktu Cek', key: 'date', width: 20 },
         { header: 'Hasil Foto', key: 'photo', width: 75 },
-        { header: 'Solusion', key: 'solution', width: 34 }
+        { header: 'Solution', key: 'solution', width: 34 }
     ];
 
     worksheet.getRow(currentRow).height = 26;
