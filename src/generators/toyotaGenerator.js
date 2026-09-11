@@ -3,7 +3,7 @@ const { processCheckpointPhotos } = require('../imageHandler');
 
 /**
  * Normalizer untuk mengubah data JSON Toyota (nested area -> sections -> items)
- * menjadi flat array item agar mudah di-render per baris.
+ * menjadi flat array item yang rapi terkelompok per Section.
  */
 function normalizeToyotaData(rawPayload) {
     let itemsArray = [];
@@ -42,9 +42,9 @@ function normalizeToyotaData(rawPayload) {
         const areaName = entry.name || 'Showroom Toyota';
         const sections = entry.sections || [];
 
-        sections.forEach(sec => {
+        sections.forEach((sec, secIdx) => {
             const secName = sec.name || 'Umum';
-            const secNo = sec.no || '';
+            const secNo = sec.no || (secIdx + 1);
             const items = sec.items || [];
 
             items.forEach(it => {
@@ -72,8 +72,9 @@ function normalizeToyotaData(rawPayload) {
 }
 
 /**
- * Generator Laporan Checkpoint TOYOTA (Sesuai Layout Presisi 9 Kolom)
- * - 9 Kolom Utama: No, Area, Section, Check Points, Hasil Penilaian, Checked By, Waktu Cek, Hasil Foto, Solusion.
+ * Generator Laporan Checkpoint TOYOTA (Per Section Rapi & Modern)
+ * - Kelompok per Section dengan Banner Header Section (Soft Ice Blue `#DBEAFE`).
+ * - 9 Kolom Utama: No, Area, Section, Check Points, Hasil Penilaian, Checked By, Waktu Cek, Hasil Foto, Solution.
  * - Legend keterangan (O = Standard, Δ = Tidak standard, X = Tidak tersedia) di sisi kanan.
  */
 async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter = null, subdetailFilter = null) {
@@ -109,10 +110,11 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
 
     const FONT_FAMILY = 'Segoe UI';
 
-    // Styles Sesuai Screenshot
+    // Styles & Colors Sesuai Tema Modern
     const fillHeaderGray = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE2E8F0' } };  // Light Gray Header
-    const fillHeaderGreen = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFC6EFCE' } }; // Light Green Solusion Header
-    const fillTitle = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };
+    const fillHeaderGreen = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFC6EFCE' } }; // Light Green Solution Header
+    const fillTitle = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };        // Slate Dark Title
+    const fillSectionBanner = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDBEAFE' } }; // Soft Ice Blue Banner
     const fillZebra = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
 
     const borderCell = {
@@ -182,7 +184,7 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
 
     let currentRow = 7;
 
-    // --- 3. HEADER TABEL DATA (9 KOLOM: No, Area, Section, Check Points, Hasil Penilaian, Checked By, Waktu Cek, Hasil Foto, Solusion) ---
+    // --- 3. HEADER TABEL DATA (9 KOLOM: No, Area, Section, Check Points, Hasil Penilaian, Checked By, Waktu Cek, Hasil Foto, Solution) ---
     const headers = [
         { header: 'No', key: 'no', width: 6 },
         { header: 'Area', key: 'area', width: 22 },
@@ -230,13 +232,38 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
     let rowCounter = 1;
     let maxFotoColWidth = 75;
 
-    // --- 4. DATA BARIS MURNI ---
+    let lastSectionName = null;
+    let sectionCounter = 0;
+
+    // --- 4. DATA BARIS DENGAN BANNER HEADER PER SECTION ---
     for (let idx = 0; idx < filteredItems.length; idx++) {
-        currentRow++;
         const item = filteredItems[idx];
+        const sectionName = item.section_name || 'Section Umum';
+
+        // Jika berpindah Section, buat baris Banner Header Section baru yang Rapi
+        if (sectionName !== lastSectionName) {
+            lastSectionName = sectionName;
+            sectionCounter++;
+            currentRow++;
+
+            worksheet.mergeCells(`A${currentRow}:I${currentRow}`);
+            const secBannerCell = worksheet.getCell(`A${currentRow}`);
+            secBannerCell.value = `   SECTION ${sectionCounter}: ${sectionName.toUpperCase()}`;
+            secBannerCell.font = { name: FONT_FAMILY, size: 10.5, bold: true, color: { argb: 'FF1E3A8A' } };
+            secBannerCell.fill = fillSectionBanner;
+            secBannerCell.alignment = { horizontal: 'left', vertical: 'middle' };
+
+            // Apply border pada baris banner
+            for (let c = 1; c <= 9; c++) {
+                const cell = worksheet.getCell(currentRow, c);
+                cell.border = borderCell;
+            }
+            worksheet.getRow(currentRow).height = 25;
+        }
+
+        currentRow++;
 
         const areaName = item.area_name || 'Showroom Toyota';
-        const sectionName = item.section_name || 'Section Umum';
         const cpName = item.checkpoint_name || '';
         const resultVal = String(item.result || '').trim();
         const checkedByVal = item.checked_by || item.check_user_name || item.check_user || item.section_user || '-';
@@ -246,7 +273,7 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
 
         const isEven = (rowCounter % 2 === 0);
 
-        // Cell Values (9 Kolom: 1=No, 2=Area, 3=Section, 4=Check Points, 5=Hasil Penilaian, 6=Checked By, 7=Waktu Cek, 8=Hasil Foto, 9=Solusion)
+        // Cell Values (9 Kolom: 1=No, 2=Area, 3=Section, 4=Check Points, 5=Hasil Penilaian, 6=Checked By, 7=Waktu Cek, 8=Hasil Foto, 9=Solution)
         const c1 = worksheet.getCell(currentRow, 1); c1.value = rowCounter; c1.alignment = alignCenter;
         const c2 = worksheet.getCell(currentRow, 2); c2.value = areaName; c2.alignment = alignCenter;
         const c3 = worksheet.getCell(currentRow, 3); c3.value = sectionName; c3.alignment = alignCenter;
