@@ -9,26 +9,38 @@
           {
             "checkPoint": "Keberadaan Monumen (kondisi terhalang)",
             "hasilPenilaian": "O",
-            "hasilFoto": "hororupload/section/27/39/1/1/1a5ef152-f736-4bc6-ab10-e29869dbd10e.jpg,hororupload/section/27/39/1/1/7b1d9b8d-ef3f-4e0c-ba42-1c951a757790.jpg",
-            "solution": "Cukup dibersihkan"
+            "check_date": "2026-07-22 09:03:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
           },
           {
             "checkPoint": "Kebersihan",
             "hasilPenilaian": "X",
-            "hasilFoto": "hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg",
-            "solution": "Pengajuan PP - Barang Pengadaan"
+            "check_date": "2026-07-22 09:41:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
           },
           {
             "checkPoint": "Kondisi Logo & huruf",
             "hasilPenilaian": "X",
+            "check_date": "2026-07-22 12:05:00",
+            "check_user_name": "Bernadya",
             "hasilFoto": "",
-            "solution": "Pengajuan PP - Rusak"
+            "solution": "Pengajuan PP - Rusak",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
           },
           {
             "checkPoint": "Kondisi lampu Logo & huruf",
             "hasilPenilaian": "X",
+            "check_date": "2026-07-22 16:10:00",
+            "check_user_name": "Bernadya",
             "hasilFoto": "",
-            "solution": "Pengajuan PP - Barang Pengadaan"
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
           }
         ]
       }
@@ -44,20 +56,29 @@
           {
             "checkPoint": "Kebersihan",
             "hasilPenilaian": "X",
+            "check_date": "2026-07-22 15:47:00",
+            "check_user_name": "Bernadya",
             "hasilFoto": "",
-            "solution": "Cukup dibersihkan"
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
           },
           {
             "checkPoint": "Kondisi Logo & huruf",
             "hasilPenilaian": "X",
+            "check_date": "2026-07-22 10:52:00",
+            "check_user_name": "Bernadya",
             "hasilFoto": "",
-            "solution": "Pengajuan PP - Barang Pengadaan"
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
           },
           {
             "checkPoint": "Kondisi lampu Logo & huruf",
             "hasilPenilaian": "X",
+            "check_date": "2026-07-22 15:05:00",
+            "check_user_name": "Bernadya",
             "hasilFoto": "",
-            "solution": "Pengajuan PP - Rusak"
+            "solution": "Pengajuan PP - Rusak",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
           }
         ]
       }
@@ -73,14 +94,1645 @@
           {
             "checkPoint": "Kondisi Permukaan Jalan",
             "hasilPenilaian": "O",
+            "check_date": "2026-07-22 14:56:00",
+            "check_user_name": "Bernadya",
             "hasilFoto": "",
-            "solution": "Cukup dibersihkan"
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
           },
           {
             "checkPoint": "Sign \"MASUK & KELUAR\"",
             "hasilPenilaian": "∆",
+            "check_date": "2026-07-22 10:24:00",
+            "check_user_name": "Bernadya",
             "hasilFoto": "",
-            "solution": "Pengajuan PP - Barang Pengadaan"
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 4,
+        "name": "Papan Petunjuk Arah",
+        "items": [
+          {
+            "checkPoint": "Kondisi tiang papan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:29:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi huruf",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 14:32:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi petunjuk arah",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:58:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Rusak",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 5,
+        "name": "Stall Parkir Tamu Showroom",
+        "items": [
+          {
+            "checkPoint": "Kondisi permukaan jalan/stall",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:35:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi Garis stall",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:09:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi rambu-rambu parkir",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:59:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Rusak",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 6,
+        "name": "Pintu Showroom",
+        "items": [
+          {
+            "checkPoint": "Kondisi pintu",
+            "hasilPenilaian": "∆",
+            "check_date": "2026-07-22 10:16:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi keset ",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:33:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Pintu bebas dari segala stiker",
+            "hasilPenilaian": "X",
+            "check_date": "2026-07-22 13:52:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Rusak",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 7,
+        "name": "Plafon Showroom",
+        "items": [
+          {
+            "checkPoint": "Kebersihan dan tidak rusak",
+            "hasilPenilaian": "X",
+            "check_date": "2026-07-22 15:30:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi lampu-lampu",
+            "hasilPenilaian": "X",
+            "check_date": "2026-07-22 11:40:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 8,
+        "name": "Meja Counter Sales",
+        "items": [
+          {
+            "checkPoint": "Kondisi meja konter",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:37:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi kursi konter sales",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:29:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi kursi tamu konter sales",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:10:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Rusak",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 9,
+        "name": "Backdrop Counter Sales",
+        "items": [
+          {
+            "checkPoint": "Kondisi Logo Backdroop",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:20:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kebersihan dinding Backdrop",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 12:47:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 10,
+        "name": "Kursi & Meja Negosisasi",
+        "items": [
+          {
+            "checkPoint": "Kondisi meja Negosiasi",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:34:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi kursi Negosiasi",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:32:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 11,
+        "name": "Meja CRC",
+        "items": [
+          {
+            "checkPoint": "Kondisi meja CRC",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:43:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi kursi CRC",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:00:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi kursi tamu CRC",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:09:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Rusak",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 12,
+        "name": "Ruang Tunggu Pelanggan",
+        "items": [
+          {
+            "checkPoint": "Kebersihan ruang tunggu",
+            "hasilPenilaian": "X",
+            "check_date": "2026-07-22 11:34:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi meja ruang tunggu",
+            "hasilPenilaian": "X",
+            "check_date": "2026-07-22 09:13:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi kursi/sofa ruang tunggu",
+            "hasilPenilaian": "X",
+            "check_date": "2026-07-22 12:30:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Rusak",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "TV berfungsi",
+            "hasilPenilaian": "X",
+            "check_date": "2026-07-22 15:14:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Cukup dibersihkan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia minuman dan snak",
+            "hasilPenilaian": "X",
+            "check_date": "2026-07-22 16:52:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Pengajuan PP - Barang Pengadaan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 13,
+        "name": "Rak TCO",
+        "items": [
+          {
+            "checkPoint": "Kondisi baik dan bersih dari debu",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:10:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi lampu",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:15:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi TV display",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:27:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kelengkapan part yg didisplay sesuai rekomendasi",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:27:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 14,
+        "name": "Wastfel Pelanggan",
+        "items": [
+          {
+            "checkPoint": "Kebersihan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 12:09:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Fungsi mata kran",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:02:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Teredia  pengering tangan/tissue",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:00:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia sabun pencuci tangan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:52:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia tempat sampah",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 12:28:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 15,
+        "name": "Toilet Pelanggan",
+        "items": [
+          {
+            "checkPoint": "Kebersihan ruang toilet",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:39:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kran berfungsi dengan baik",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:44:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kran Toilet berfungsi dengan baik & bersih",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 12:41:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Urinoir berfungsi dengan baik & Bersih",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:54:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Pintu toilet berfungsi dengan baik",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:26:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia tissue",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:47:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia pengharum",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:31:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 16,
+        "name": "Stall DEC",
+        "items": [
+          {
+            "checkPoint": "Kebersihan dinding & Plafon",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:31:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kebersihanlantai",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:53:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi lantai",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:24:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Showroom Toyota",
+    "sections": [
+      {
+        "no": 17,
+        "name": "Ruang Makan Staff",
+        "items": [
+          {
+            "checkPoint": "Kebersihan ruangan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:38:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi Plafon",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:16:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia pendingin ruangan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:34:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi wastafel",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:17:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 1,
+        "name": "Stall Parkir Servis ",
+        "items": [
+          {
+            "checkPoint": "Kondisi permukaan jalan",
+            "hasilPenilaian": "X",
+            "check_date": "2026-07-22 14:45:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi garis stall",
+            "hasilPenilaian": "X",
+            "check_date": "2026-07-22 12:15:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi rambu-rambu",
+            "hasilPenilaian": "X",
+            "check_date": "2026-07-22 09:25:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 12:33:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 2,
+        "name": "Stall Penerimaan & Penyerahan",
+        "items": [
+          {
+            "checkPoint": "Kondisi plafon",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:57:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi lampu",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:33:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi stall",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:36:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 11:33:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 3,
+        "name": "Konter SA",
+        "items": [
+          {
+            "checkPoint": "Kondisi meja konter",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 14:40:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi kursi konter sales",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:42:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi kursi tamu konter sales",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:40:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 14:10:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 4,
+        "name": "Plafon Konter Penerimaan Servis",
+        "items": [
+          {
+            "checkPoint": "Kebersihan dan tidak rusak",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 14:23:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi lampu-lampu",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:37:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 14:35:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 5,
+        "name": "Kursi Antri Pelanggan Servis",
+        "items": [
+          {
+            "checkPoint": "Kerapian pengaturan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:04:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi baik & bersih",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:31:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 11:42:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 6,
+        "name": "Ruang Tunggu Servis",
+        "items": [
+          {
+            "checkPoint": "Kebersihan ruang tunggu",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 14:13:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi meja ruang tunggu",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:26:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi kursi/sofa ruang tunggu",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:18:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "TV berfungsi",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:02:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia minuman dan snak",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:47:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 16:26:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 7,
+        "name": "Wastfel Ruang Tunggu Servis",
+        "items": [
+          {
+            "checkPoint": "Kebersihan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:57:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Fungsi mata kran",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:41:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Teredia  pengering tangan/tissue",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:56:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia sabun pencuci tangan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:09:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia tempat sampah",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:54:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 15:08:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 8,
+        "name": "Toilet Pelanggan",
+        "items": [
+          {
+            "checkPoint": "Kebersihan ruang toilet",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:28:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kran berfungsi dengan baik",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 12:20:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kran Toilet berfungsi dengan baik & bersih",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 14:39:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Urinoir berfungsi dengan baik & Bersih",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:42:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Pintu tolit berfungsi dengan baik",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:46:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia tissue",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:01:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia pengharum",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:36:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 14:36:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 9,
+        "name": "Rak Car Care",
+        "items": [
+          {
+            "checkPoint": "Kondisi baik dan bersih dari debu",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 14:43:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kelengkapan material yg didisplay sesuai rekomendasi",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:47:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 12:23:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 10,
+        "name": "Rak Ban",
+        "items": [
+          {
+            "checkPoint": "Kondisi baik dan bersih dari debu",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:00:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kelengkapan material yg didisplay sesuai rekomendasi",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:22:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 16:23:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 11,
+        "name": "Ruang makan Mekanik",
+        "items": [
+          {
+            "checkPoint": "Kebersihan ruangan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:22:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi Plafon",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:22:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia pendingin ruangan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 12:29:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi wastafel",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:40:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 11:18:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 12,
+        "name": "Ruang istirahat/locker Mekanik",
+        "items": [
+          {
+            "checkPoint": "Kebersihan ruangan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:34:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi Plafon",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 14:03:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi Locker",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:05:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia alat pendingin ruangan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:17:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 10:17:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 13,
+        "name": "Toilet Mekanik",
+        "items": [
+          {
+            "checkPoint": "Kebersihan ruang toilet",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:12:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kran berfungsi dengan baik",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:37:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kran Toilet berfungsi dengan baik & bersih",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 12:36:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Urinoir berfungsi dengan baik & Bersih",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:23:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Pintu toilet berfungsi dengan baik",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 12:53:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 11:40:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 14,
+        "name": "Area Bengkel",
+        "items": [
+          {
+            "checkPoint": "Kebersihan Area",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 14:08:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi lantai",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 14:40:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tersedia pentilasi / kipas angin diarea bengkel",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:30:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Peralatan/Equipment tertata dengan rapi",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:02:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Two/Four post lif berfungis degan baik/stndard",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:26:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 10:23:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kebersihan ruangan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:05:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kebersihan Plafon dan tidak rusak",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:04:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Lampu berfungsi dengan baik",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:06:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Suku cadang tertata dengan rapi sesuai lokasinya",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 14:19:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 14:25:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bengkel",
+    "sections": [
+      {
+        "no": 16,
+        "name": "Bak Sampah",
+        "items": [
+          {
+            "checkPoint": "Standard",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:47:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Sampah tidak berserakan",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:39:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Kondisi Pintu penutup bak sampah dlm keadaan baik ",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:16:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 12:57:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Penjelasan :",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Area uniform",
+    "sections": [
+      {
+        "no": 1,
+        "name": "Uniform Counter Sales",
+        "items": [
+          {
+            "checkPoint": "Standard",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:08:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tidak kontor",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 16:33:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 16:09:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Area uniform",
+    "sections": [
+      {
+        "no": 2,
+        "name": "Uniform Sales Executive",
+        "items": [
+          {
+            "checkPoint": "Standard",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 11:17:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tidak kontor",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:55:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 14:42:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Area uniform",
+    "sections": [
+      {
+        "no": 3,
+        "name": "Uniform Servis Advisor",
+        "items": [
+          {
+            "checkPoint": "Standard",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 10:18:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tidak kontor",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 13:42:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 13:41:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Area uniform",
+    "sections": [
+      {
+        "no": 4,
+        "name": "Uniform Mekanik",
+        "items": [
+          {
+            "checkPoint": "Standard",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:12:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tidak kontor",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 09:00:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 14:05:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Area uniform",
+    "sections": [
+      {
+        "no": 5,
+        "name": "Uniform Security",
+        "items": [
+          {
+            "checkPoint": "Standard",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 12:23:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Pengajuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Tidak kontor",
+            "hasilPenilaian": "O",
+            "check_date": "2026-07-22 15:02:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Tanggal Persetujuan RAP",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
+          },
+          {
+            "checkPoint": "Penjelasan :",
+            "hasilPenilaian": "",
+            "check_date": "2026-07-22 16:42:00",
+            "check_user_name": "Bernadya",
+            "hasilFoto": "",
+            "solution": "Due Date Pekerjaan Perbaikan",
+            "img_path": "https://hrms.hasjrat.co.id/horor/hororupload/section/27/39/1/1/bf27c8b2-92b0-4218-ab11-2c5f07519bab.jpg"
           }
         ]
       }

@@ -31,7 +31,7 @@ function normalizeToyotaData(rawPayload) {
                 checkpoint_name: entry.checkpoint_name || entry.checkPoint || '',
                 result: entry.result || entry.hasilPenilaian || '',
                 checked_by: entry.check_user_name || entry.checked_by_name || entry.checked_by || entry.check_user || entry.section_user_name || entry.section_user || entry.created_user || '-',
-                section_date: entry.section_date || entry.doc_date || entry.created_date || '-',
+                section_date: entry.section_date || entry.check_date || entry.doc_date || entry.created_date || '-',
                 solution: entry.solution || entry.solusi || '',
                 img_path: entry.img_path || entry.hasilFoto || entry.hasil_foto || entry.img || entry.foto || entry.image || entry.image_path || entry.path_foto || ''
             });
@@ -50,7 +50,7 @@ function normalizeToyotaData(rawPayload) {
             items.forEach(it => {
                 const imgRef = it.img_path || it.hasilFoto || it.hasil_foto || it.img || it.foto || it.image || it.image_path || it.path_foto || '';
                 const checkUserVal = it.check_user_name || it.checked_by_name || it.checked_by || it.check_user || it.section_user_name || it.section_user || it.created_user || entry.check_user_name || entry.check_user || '-';
-                const checkDateVal = it.section_date || it.doc_date || it.created_date || entry.doc_date || '-';
+                const checkDateVal = it.section_date || it.check_date || it.doc_date || it.created_date || entry.doc_date || '-';
 
                 itemsArray.push({
                     area_name: areaName,
@@ -75,8 +75,7 @@ function normalizeToyotaData(rawPayload) {
  * Generator Laporan Checkpoint TOYOTA (Sesuai Screenshot Presisi - Section Block Merged Format)
  * - 7 Kolom Utama: No, Area, Section, Check Points, Hasil Penilaian, Hasil Foto, Solution.
  * - Kolom No, Area, Section, dan Hasil Foto di-merge secara vertikal per Section block.
- * - Header Solution berwarna hijau `#C6EFCE` dengan font hijau tebal.
- * - Legend keterangan (O = Standard, Δ = Tidak standard, X = Tidak tersedia) di sisi kanan.
+ * - Pemrosesan Gambar Paralel Super Cepat (Promise.all).
  */
 async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter = null, subdetailFilter = null) {
     const items = normalizeToyotaData(rawPayload);
@@ -115,7 +114,6 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
     const fillHeaderGray = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE2E8F0' } };  // Light Gray Header
     const fillHeaderGreen = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFC6EFCE' } }; // Light Green Solution Header
     const fillTitle = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };        // Slate Dark Title
-    const fillZebra = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
 
     const borderCell = {
         top: { style: 'thin', color: { argb: 'FFCBD5E1' } },
@@ -249,12 +247,24 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
 
     let maxFotoColWidth = 75;
 
+    // PROSES SEMUA FOTO SECTION SECARA PARALEL (SUPER FAST!)
+    const sectionImages = await Promise.all(
+        sectionGroups.map(group => {
+            const secPhotosStr = group.items
+                .map(it => it.img_path || it.hasilFoto || it.hasil_foto || it.img || it.foto)
+                .filter(Boolean)
+                .join(',');
+            return processCheckpointPhotos(secPhotosStr);
+        })
+    );
+
     // --- 4. RENDER BARIS SECTION BLOCK MERGED SESUAI SCREENSHOT TOYOTA ---
     for (let gIdx = 0; gIdx < sectionGroups.length; gIdx++) {
         const group = sectionGroups[gIdx];
         const numItems = group.items.length;
         const startRow = currentRow + 1;
         const endRow = startRow + numItems - 1;
+        const imgData = sectionImages[gIdx];
 
         // Render tiap item baris pada Section ini
         for (let i = 0; i < numItems; i++) {
@@ -322,13 +332,6 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
         const cPhoto = worksheet.getCell(startRow, 6);
         cPhoto.alignment = alignCenter;
 
-        // Kumpulkan semua foto untuk Section ini
-        const secPhotosStr = group.items
-            .map(it => it.img_path || it.hasilFoto || it.hasil_foto || it.img || it.foto)
-            .filter(Boolean)
-            .join(',');
-
-        const imgData = await processCheckpointPhotos(secPhotosStr);
         if (imgData) {
             const imageId = workbook.addImage({
                 buffer: imgData.buffer,

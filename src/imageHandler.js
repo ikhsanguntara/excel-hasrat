@@ -11,15 +11,38 @@ const GAP = 12;
 const PADDING = 8;
 const BASE_IMAGE_URL = 'https://hrms.hasjrat.co.id/horor/';
 
-// Https Agent dengan rejectUnauthorized: false untuk menangani SSL sertifikat server Hasjrat
+// In-memory cache & In-flight request deduplicator (Mencegah request HTTP berulang ke server)
+const rawImageCache = new Map();
+const inFlightRequests = new Map();
+const processedThumbCache = new Map();
+const inFlightThumbs = new Map();
+
+// Https Agent dengan rejectUnauthorized: false & keep-alive
 const httpsAgent = new https.Agent({
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    keepAlive: true,
+    maxSockets: 50
+});
+
+// Axios instance
+const apiClient = axios.create({
+    httpsAgent: httpsAgent,
+    timeout: 10000,
+    responseType: 'arraybuffer',
+    headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    }
 });
 
 /**
  * Membuat buffer foto placeholder jika foto asli tidak ditemukan / error.
  */
 async function createPlaceholderImage(text = "Foto Kosong", width = THUMB_WIDTH, height = THUMB_HEIGHT) {
+    const cacheKey = `placeholder_${text}_${width}_${height}`;
+    if (processedThumbCache.has(cacheKey)) {
+        return processedThumbCache.get(cacheKey);
+    }
+
     const svgText = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
         <rect width="100%" height="100%" fill="#F0F3F6"/>
@@ -28,11 +51,13 @@ async function createPlaceholderImage(text = "Foto Kosong", width = THUMB_WIDTH,
             ${text}
         </text>
     </svg>`;
-    return sharp(Buffer.from(svgText)).png().toBuffer();
+    const buf = await sharp(Buffer.from(svgText)).png().toBuffer();
+    processedThumbCache.set(cacheKey, buf);
+    return buf;
 }
 
 /**
- * Membaca buffer foto dari URL (HTTP/HTTPS) atau File Lokal.
+ * Membaca buffer foto dari URL (HTTP/HTTPS) atau File Lokal dengan In-Memory Caching & In-Flight Deduplication.
  */
 async function loadImageBuffer(imgRef) {
     if (!imgRef || typeof imgRef !== 'string') {
@@ -43,7 +68,6 @@ async function loadImageBuffer(imgRef) {
 
     // Jika path belum diawali http:// atau https://
     if (!cleanRef.startsWith('http://') && !cleanRef.startsWith('https://')) {
-        // Jika file lokal ada di disk lokal, prioritaskan disk lokal
         if (fs.existsSync(cleanRef)) {
             return fs.readFileSync(cleanRef);
         }
@@ -52,59 +76,90 @@ async function loadImageBuffer(imgRef) {
             return fs.readFileSync(baseName);
         }
 
-        // Hapus slash di paling depan jika ada
         if (cleanRef.startsWith('/')) {
             cleanRef = cleanRef.substring(1);
         }
 
-        // Mencegah duplikasi URL "horor/horor/hororupload..."
         if (cleanRef.startsWith('horor/')) {
             cleanRef = cleanRef.substring(6);
         }
 
-        // Konstruksi URL full
         cleanRef = BASE_IMAGE_URL + cleanRef;
     }
 
-    try {
-        const encodedUrl = encodeURI(cleanRef);
-        const response = await axios.get(encodedUrl, {
-            responseType: 'arraybuffer',
-            timeout: 15000,
-            httpsAgent: httpsAgent,
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            }
-        });
-        return Buffer.from(response.data);
-    } catch (err) {
-        console.warn(`Gagal mendownload gambar dari ${cleanRef}: ${err.message}`);
-        return createPlaceholderImage("Foto Lampiran");
+    // 1. Cek Memory Cache (0ms Instant!)
+    if (rawImageCache.has(cleanRef)) {
+        return rawImageCache.get(cleanRef);
     }
+
+    // 2. Cek apakah URL ini sedang dalam proses download (Deduplikasi In-Flight Request)
+    if (inFlightRequests.has(cleanRef)) {
+        return inFlightRequests.get(cleanRef);
+    }
+
+    const downloadPromise = (async () => {
+        try {
+            const encodedUrl = encodeURI(cleanRef);
+            const response = await apiClient.get(encodedUrl);
+            const buf = Buffer.from(response.data);
+            rawImageCache.set(cleanRef, buf);
+            return buf;
+        } catch (err) {
+            console.warn(`Gagal mendownload gambar dari ${cleanRef}: ${err.message}`);
+            const placeholder = await createPlaceholderImage("Foto Kosong");
+            rawImageCache.set(cleanRef, placeholder);
+            return placeholder;
+        } finally {
+            inFlightRequests.delete(cleanRef);
+        }
+    })();
+
+    inFlightRequests.set(cleanRef, downloadPromise);
+    return downloadPromise;
 }
 
 /**
  * Meresize foto ke ukuran seragam yang besar & lebar (220x150px) dengan crop center & border presisi.
  */
 async function processSinglePhoto(imgRef) {
-    const rawBuffer = await loadImageBuffer(imgRef);
-    try {
-        const borderOverlay = Buffer.from(
-            `<svg width="${THUMB_WIDTH}" height="${THUMB_HEIGHT}"><rect x="0" y="0" width="${THUMB_WIDTH}" height="${THUMB_HEIGHT}" fill="none" stroke="#CBD5E1" stroke-width="1.5"/></svg>`
-        );
-
-        return await sharp(rawBuffer)
-            .resize(THUMB_WIDTH, THUMB_HEIGHT, { 
-                fit: 'cover', 
-                position: 'center',
-                withoutEnlargement: false 
-            })
-            .composite([{ input: borderOverlay }])
-            .png()
-            .toBuffer();
-    } catch (e) {
-        return createPlaceholderImage("Format Gambar");
+    const cacheKey = `thumb_${imgRef}_${THUMB_WIDTH}_${THUMB_HEIGHT}`;
+    if (processedThumbCache.has(cacheKey)) {
+        return processedThumbCache.get(cacheKey);
     }
+    if (inFlightThumbs.has(cacheKey)) {
+        return inFlightThumbs.get(cacheKey);
+    }
+
+    const thumbPromise = (async () => {
+        const rawBuffer = await loadImageBuffer(imgRef);
+        try {
+            const borderOverlay = Buffer.from(
+                `<svg width="${THUMB_WIDTH}" height="${THUMB_HEIGHT}"><rect x="0" y="0" width="${THUMB_WIDTH}" height="${THUMB_HEIGHT}" fill="none" stroke="#CBD5E1" stroke-width="1.5"/></svg>`
+            );
+
+            const resized = await sharp(rawBuffer)
+                .resize(THUMB_WIDTH, THUMB_HEIGHT, { 
+                    fit: 'cover', 
+                    position: 'center',
+                    withoutEnlargement: false 
+                })
+                .composite([{ input: borderOverlay }])
+                .png()
+                .toBuffer();
+
+            processedThumbCache.set(cacheKey, resized);
+            return resized;
+        } catch (e) {
+            const placeholder = await createPlaceholderImage("Format Gambar");
+            processedThumbCache.set(cacheKey, placeholder);
+            return placeholder;
+        } finally {
+            inFlightThumbs.delete(cacheKey);
+        }
+    })();
+
+    inFlightThumbs.set(cacheKey, thumbPromise);
+    return thumbPromise;
 }
 
 /**
@@ -116,24 +171,28 @@ async function processCheckpointPhotos(imgPathStr) {
         return null;
     }
 
-    // Split berdasarkan koma, titik koma, atau baris baru
-    const paths = imgPathStr
+    const rawPaths = imgPathStr
         .split(/[,;\n]+/)
         .map(p => p.trim())
         .filter(p => p.length > 0);
+
+    const paths = [...new Set(rawPaths)];
 
     if (paths.length === 0) {
         return null;
     }
 
-    // Process & resize semua foto secara paralel ke dimensi besar 220x150px
+    const compositeCacheKey = `composite_${paths.join('___')}_${THUMB_WIDTH}_${THUMB_HEIGHT}`;
+    if (processedThumbCache.has(compositeCacheKey)) {
+        return processedThumbCache.get(compositeCacheKey);
+    }
+
     const thumbBuffers = await Promise.all(paths.map(p => processSinglePhoto(p)));
     const count = thumbBuffers.length;
 
     const totalWidth = (PADDING * 2) + (count * THUMB_WIDTH) + ((count - 1) * GAP);
     const totalHeight = (PADDING * 2) + THUMB_HEIGHT;
 
-    // Canvas latar belakang bersih dengan border luar halus
     const bgSvg = Buffer.from(
         `<svg width="${totalWidth}" height="${totalHeight}">
             <rect width="100%" height="100%" fill="#F8FAFC"/>
@@ -167,12 +226,15 @@ async function processCheckpointPhotos(imgPathStr) {
     .png()
     .toBuffer();
 
-    return {
+    const result = {
         buffer: finalBuffer,
         widthPx: totalWidth,
         heightPx: totalHeight,
         count: count
     };
+
+    processedThumbCache.set(compositeCacheKey, result);
+    return result;
 }
 
 module.exports = {
