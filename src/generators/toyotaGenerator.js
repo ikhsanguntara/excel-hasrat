@@ -3,7 +3,7 @@ const { processCheckpointPhotos } = require('../imageHandler');
 
 /**
  * Normalizer untuk mengubah data JSON Toyota (nested area -> sections -> items)
- * menjadi flat array item yang rapi terkelompok per Section.
+ * menjadi flat array item yang rapi.
  */
 function normalizeToyotaData(rawPayload) {
     let itemsArray = [];
@@ -72,9 +72,10 @@ function normalizeToyotaData(rawPayload) {
 }
 
 /**
- * Generator Laporan Checkpoint TOYOTA (Per Section Rapi & Modern)
- * - Kelompok per Section dengan Banner Header Section (Soft Ice Blue `#DBEAFE`).
- * - 9 Kolom Utama: No, Area, Section, Check Points, Hasil Penilaian, Checked By, Waktu Cek, Hasil Foto, Solution.
+ * Generator Laporan Checkpoint TOYOTA (Sesuai Screenshot Presisi - Section Block Merged Format)
+ * - 7 Kolom Utama: No, Area, Section, Check Points, Hasil Penilaian, Hasil Foto, Solution.
+ * - Kolom No, Area, Section, dan Hasil Foto di-merge secara vertikal per Section block.
+ * - Header Solution berwarna hijau `#C6EFCE` dengan font hijau tebal.
  * - Legend keterangan (O = Standard, Δ = Tidak standard, X = Tidak tersedia) di sisi kanan.
  */
 async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter = null, subdetailFilter = null) {
@@ -110,11 +111,10 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
 
     const FONT_FAMILY = 'Segoe UI';
 
-    // Styles & Colors Sesuai Tema Modern
+    // Styles & Colors Sesuai Screenshot Toyota
     const fillHeaderGray = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE2E8F0' } };  // Light Gray Header
     const fillHeaderGreen = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFC6EFCE' } }; // Light Green Solution Header
     const fillTitle = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };        // Slate Dark Title
-    const fillSectionBanner = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDBEAFE' } }; // Soft Ice Blue Banner
     const fillZebra = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
 
     const borderCell = {
@@ -127,8 +127,8 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
     const alignCenter = { horizontal: 'center', vertical: 'middle', wrapText: true };
     const alignLeft = { horizontal: 'left', vertical: 'middle', wrapText: true };
 
-    // --- 1. BANNER JUDUL (Merged A1:I1) ---
-    worksheet.mergeCells('A1:I1');
+    // --- 1. BANNER JUDUL (Merged A1:G1) ---
+    worksheet.mergeCells('A1:G1');
     const titleCell = worksheet.getCell('A1');
     
     let filterSubtitle = [];
@@ -184,17 +184,15 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
 
     let currentRow = 7;
 
-    // --- 3. HEADER TABEL DATA (9 KOLOM: No, Area, Section, Check Points, Hasil Penilaian, Checked By, Waktu Cek, Hasil Foto, Solution) ---
+    // --- 3. HEADER TABEL DATA (7 KOLOM SESUAI SCREENSHOT: No, Area, Section, Check Points, Hasil Penilaian, Hasil Foto, Solution) ---
     const headers = [
         { header: 'No', key: 'no', width: 6 },
-        { header: 'Area', key: 'area', width: 22 },
+        { header: 'Area', key: 'area', width: 24 },
         { header: 'Section', key: 'section', width: 22 },
         { header: 'Check Points', key: 'question', width: 44 },
         { header: 'Hasil Penilaian', key: 'result', width: 14 },
-        { header: 'Checked By', key: 'checked_by', width: 22 },
-        { header: 'Waktu Cek', key: 'date', width: 20 },
         { header: 'Hasil Foto', key: 'photo', width: 75 },
-        { header: 'Solution', key: 'solution', width: 34 }
+        { header: 'Solution', key: 'solution', width: 38 }
     ];
 
     worksheet.getRow(currentRow).height = 26;
@@ -215,138 +213,169 @@ async function generateToyotaExcel(rawPayload, areaFilter = null, sectionFilter 
         }
     });
 
-    // LEGEND KETERANGAN DI SISI KANAN (KOLOM K)
-    const legRow1 = worksheet.getCell(`K${currentRow}`);
+    // LEGEND KETERANGAN DI SISI KANAN (KOLOM I)
+    const legRow1 = worksheet.getCell(`I${currentRow}`);
     legRow1.value = 'O  = Standard';
     legRow1.font = { name: FONT_FAMILY, size: 9, bold: true, color: { argb: 'FF1E293B' } };
 
-    const legRow2 = worksheet.getCell(`K${currentRow + 1}`);
+    const legRow2 = worksheet.getCell(`I${currentRow + 1}`);
     legRow2.value = 'Δ  = Tidak standard';
     legRow2.font = { name: FONT_FAMILY, size: 9, bold: true, color: { argb: 'FF1E293B' } };
 
-    const legRow3 = worksheet.getCell(`K${currentRow + 2}`);
+    const legRow3 = worksheet.getCell(`I${currentRow + 2}`);
     legRow3.value = 'X  = Tidak tersedia';
     legRow3.font = { name: FONT_FAMILY, size: 9, bold: true, color: { argb: 'FF1E293B' } };
 
     const headerRowIdx = currentRow;
-    let rowCounter = 1;
+
+    // Group items by Section
+    const sectionGroups = [];
+    let currentGroup = null;
+
+    filteredItems.forEach(item => {
+        const secKey = `${item.area_name}___${item.section_name}`;
+        if (!currentGroup || currentGroup.key !== secKey) {
+            currentGroup = {
+                key: secKey,
+                area_name: item.area_name || 'Showroom Toyota',
+                section_name: item.section_name || 'Section Umum',
+                section_no: item.section_no || (sectionGroups.length + 1),
+                items: []
+            };
+            sectionGroups.push(currentGroup);
+        }
+        currentGroup.items.push(item);
+    });
+
     let maxFotoColWidth = 75;
 
-    let lastSectionName = null;
-    let sectionCounter = 0;
+    // --- 4. RENDER BARIS SECTION BLOCK MERGED SESUAI SCREENSHOT TOYOTA ---
+    for (let gIdx = 0; gIdx < sectionGroups.length; gIdx++) {
+        const group = sectionGroups[gIdx];
+        const numItems = group.items.length;
+        const startRow = currentRow + 1;
+        const endRow = startRow + numItems - 1;
 
-    // --- 4. DATA BARIS DENGAN BANNER HEADER PER SECTION ---
-    for (let idx = 0; idx < filteredItems.length; idx++) {
-        const item = filteredItems[idx];
-        const sectionName = item.section_name || 'Section Umum';
+        // Render tiap item baris pada Section ini
+        for (let i = 0; i < numItems; i++) {
+            const r = startRow + i;
+            const item = group.items[i];
 
-        // Jika berpindah Section, buat baris Banner Header Section baru yang Rapi
-        if (sectionName !== lastSectionName) {
-            lastSectionName = sectionName;
-            sectionCounter++;
-            currentRow++;
+            const cpName = item.checkpoint_name || '';
+            const resultVal = String(item.result || '').trim();
+            const solutionText = String(item.solution || '').trim();
 
-            worksheet.mergeCells(`A${currentRow}:I${currentRow}`);
-            const secBannerCell = worksheet.getCell(`A${currentRow}`);
-            secBannerCell.value = `   SECTION ${sectionCounter}: ${sectionName.toUpperCase()}`;
-            secBannerCell.font = { name: FONT_FAMILY, size: 10.5, bold: true, color: { argb: 'FF1E3A8A' } };
-            secBannerCell.fill = fillSectionBanner;
-            secBannerCell.alignment = { horizontal: 'left', vertical: 'middle' };
+            const c4 = worksheet.getCell(r, 4); c4.value = cpName; c4.alignment = alignLeft;
+            const c5 = worksheet.getCell(r, 5); c5.value = resultVal; c5.alignment = alignCenter;
+            const c7 = worksheet.getCell(r, 7); c7.value = solutionText || '-'; c7.alignment = alignLeft;
 
-            // Apply border pada baris banner
-            for (let c = 1; c <= 9; c++) {
-                const cell = worksheet.getCell(currentRow, c);
+            // Color Result Badge Toyota:
+            const resUpper = resultVal.toUpperCase();
+            if (resUpper === 'O' || resUpper === 'Y') {
+                c5.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDCFCE7' } };
+                c5.font = { name: FONT_FAMILY, size: 10.5, bold: true, color: { argb: 'FF15803D' } };
+            } else if (resUpper === 'X' || resUpper === 'N') {
+                c5.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEE2E2' } };
+                c5.font = { name: FONT_FAMILY, size: 10.5, bold: true, color: { argb: 'FFB91C1C' } };
+            } else if (resUpper === '∆' || resUpper === 'DELTA') {
+                c5.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF3C7' } };
+                c5.font = { name: FONT_FAMILY, size: 10.5, bold: true, color: { argb: 'FFB45309' } };
+            } else {
+                c5.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE0F2FE' } };
+                c5.font = { name: FONT_FAMILY, size: 9.5, bold: true, color: { argb: 'FF0369A1' } };
+            }
+
+            // Apply default border & font untuk baris r
+            for (let c = 1; c <= 7; c++) {
+                const cell = worksheet.getCell(r, c);
                 cell.border = borderCell;
-            }
-            worksheet.getRow(currentRow).height = 25;
-        }
-
-        currentRow++;
-
-        const areaName = item.area_name || 'Showroom Toyota';
-        const cpName = item.checkpoint_name || '';
-        const resultVal = String(item.result || '').trim();
-        const checkedByVal = item.checked_by || item.check_user_name || item.check_user || item.section_user || '-';
-        const secDate = item.section_date || item.doc_date || '-';
-        const solutionText = String(item.solution || '').trim();
-        const imgPathStr = item.img_path || item.hasilFoto || item.hasil_foto || item.img || item.foto || '';
-
-        const isEven = (rowCounter % 2 === 0);
-
-        // Cell Values (9 Kolom: 1=No, 2=Area, 3=Section, 4=Check Points, 5=Hasil Penilaian, 6=Checked By, 7=Waktu Cek, 8=Hasil Foto, 9=Solution)
-        const c1 = worksheet.getCell(currentRow, 1); c1.value = rowCounter; c1.alignment = alignCenter;
-        const c2 = worksheet.getCell(currentRow, 2); c2.value = areaName; c2.alignment = alignCenter;
-        const c3 = worksheet.getCell(currentRow, 3); c3.value = sectionName; c3.alignment = alignCenter;
-        const c4 = worksheet.getCell(currentRow, 4); c4.value = cpName; c4.alignment = alignLeft;
-        const c5 = worksheet.getCell(currentRow, 5); c5.value = resultVal; c5.alignment = alignCenter;
-        const c6 = worksheet.getCell(currentRow, 6); c6.value = checkedByVal; c6.alignment = alignCenter;
-        const c7 = worksheet.getCell(currentRow, 7); c7.value = secDate; c7.alignment = alignCenter;
-        const c8 = worksheet.getCell(currentRow, 8); c8.alignment = alignCenter;
-        const c9 = worksheet.getCell(currentRow, 9); c9.value = solutionText || '-'; c9.alignment = alignLeft;
-
-        // Color Result Badge Toyota:
-        const resUpper = resultVal.toUpperCase();
-        if (resUpper === 'O' || resUpper === 'Y') {
-            c5.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDCFCE7' } };
-            c5.font = { name: FONT_FAMILY, size: 10.5, bold: true, color: { argb: 'FF15803D' } };
-        } else if (resUpper === 'X' || resUpper === 'N') {
-            c5.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEE2E2' } };
-            c5.font = { name: FONT_FAMILY, size: 10.5, bold: true, color: { argb: 'FFB91C1C' } };
-        } else if (resUpper === '∆' || resUpper === 'DELTA') {
-            c5.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF3C7' } };
-            c5.font = { name: FONT_FAMILY, size: 10.5, bold: true, color: { argb: 'FFB45309' } };
-        } else {
-            c5.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE0F2FE' } };
-            c5.font = { name: FONT_FAMILY, size: 9.5, bold: true, color: { argb: 'FF0369A1' } };
-        }
-
-        // Apply borders & font default
-        for (let c = 1; c <= 9; c++) {
-            const cell = worksheet.getCell(currentRow, c);
-            cell.border = borderCell;
-            if (c !== 5) { // Kecuali kolom penilaian (E)
-                cell.font = { name: FONT_FAMILY, size: 9.5, color: { argb: 'FF334155' } };
-                if (isEven) cell.fill = fillZebra;
+                if (c !== 5) {
+                    cell.font = { name: FONT_FAMILY, size: 9.5, color: { argb: 'FF334155' } };
+                }
             }
         }
 
-        // Process Photos ke Kolom 8 (H -> 0-index 7)
-        const imgData = await processCheckpointPhotos(imgPathStr);
+        // --- MERGE CELLS SESUAI SCREENSHOT TOYOTA ---
+        // 1. Merge Col A (No)
+        if (numItems > 1) worksheet.mergeCells(startRow, 1, endRow, 1);
+        const cNo = worksheet.getCell(startRow, 1);
+        cNo.value = group.section_no;
+        cNo.font = { name: FONT_FAMILY, size: 12, bold: true, color: { argb: 'FF0F172A' } };
+        cNo.alignment = alignCenter;
+
+        // 2. Merge Col B (Area)
+        if (numItems > 1) worksheet.mergeCells(startRow, 2, endRow, 2);
+        const cArea = worksheet.getCell(startRow, 2);
+        cArea.value = group.area_name;
+        cArea.font = { name: FONT_FAMILY, size: 11, bold: true, color: { argb: 'FF0F172A' } };
+        cArea.alignment = alignCenter;
+
+        // 3. Merge Col C (Section)
+        if (numItems > 1) worksheet.mergeCells(startRow, 3, endRow, 3);
+        const cSec = worksheet.getCell(startRow, 3);
+        cSec.value = group.section_name;
+        cSec.font = { name: FONT_FAMILY, size: 11, bold: true, color: { argb: 'FF0F172A' } };
+        cSec.alignment = alignCenter;
+
+        // 4. Merge Col F (Hasil Foto)
+        if (numItems > 1) worksheet.mergeCells(startRow, 6, endRow, 6);
+        const cPhoto = worksheet.getCell(startRow, 6);
+        cPhoto.alignment = alignCenter;
+
+        // Kumpulkan semua foto untuk Section ini
+        const secPhotosStr = group.items
+            .map(it => it.img_path || it.hasilFoto || it.hasil_foto || it.img || it.foto)
+            .filter(Boolean)
+            .join(',');
+
+        const imgData = await processCheckpointPhotos(secPhotosStr);
         if (imgData) {
             const imageId = workbook.addImage({
                 buffer: imgData.buffer,
                 extension: 'png'
             });
 
-            // Lebar kolom 8 (H) disesuaikan presisi dengan dimensi foto 220x150 px
             const neededColW = Math.round(imgData.widthPx / 7) + 6;
             if (neededColW > maxFotoColWidth) {
                 maxFotoColWidth = neededColW;
             }
-            worksheet.getColumn(8).width = maxFotoColWidth;
+            worksheet.getColumn(6).width = maxFotoColWidth;
 
-            // Tinggi baris disesuaikan presisi dengan tinggi foto 150px
-            const calcHeight = Math.max(130, Math.round((imgData.heightPx + 20) * 0.75));
-            worksheet.getRow(currentRow).height = calcHeight;
+            // Hitung tinggi total section block agar foto muat sempurna
+            const reqTotalH = Math.max(numItems * 28, Math.round((imgData.heightPx + 24) * 0.75));
+            const rowH = Math.max(28, Math.round(reqTotalH / numItems));
 
-            const rZero = currentRow - 1;
+            for (let r = startRow; r <= endRow; r++) {
+                worksheet.getRow(r).height = rowH;
+            }
+
+            const rZero = startRow - 1;
             worksheet.addImage(imageId, {
-                tl: { col: 7.04, row: rZero + 0.04 },
+                tl: { col: 5.04, row: rZero + 0.04 },
                 ext: { width: imgData.widthPx, height: imgData.heightPx },
                 editAs: 'oneCell'
             });
         } else {
-            worksheet.getRow(currentRow).height = 28;
-            c8.value = '-';
+            for (let r = startRow; r <= endRow; r++) {
+                worksheet.getRow(r).height = 28;
+            }
+            cPhoto.value = '-';
         }
 
-        rowCounter++;
+        // Terapkan border ke seluruh sel dalam blok section agar garis tabel utuh
+        for (let r = startRow; r <= endRow; r++) {
+            for (let c = 1; c <= 7; c++) {
+                worksheet.getCell(r, c).border = borderCell;
+            }
+        }
+
+        currentRow = endRow;
     }
 
-    // AUTOFILTER EXCEL AKTIF PADA RANGE A7:I[lastRow]
+    // AUTOFILTER EXCEL AKTIF PADA RANGE A7:G[lastRow]
     worksheet.autoFilter = {
         from: { row: headerRowIdx, column: 1 },
-        to: { row: currentRow, column: 9 }
+        to: { row: currentRow, column: 7 }
     };
 
     return await workbook.xlsx.writeBuffer();
