@@ -1,13 +1,17 @@
 const { generateYamahaExcel } = require('./yamahaGenerator');
 const { generateToyotaExcel } = require('./toyotaGenerator');
+const { generateAssetCountingExcel } = require('./assetCountingGenerator');
 
 /**
  * Registry untuk menyimpan berbagai jenis generator laporan Excel.
- * Mendukung format: 'yamaha', 'toyota', dan 'default'.
+ * Mendukung format: 'yamaha', 'toyota', 'asset-counting', 'asset', dan 'default'.
  */
 const generatorRegistry = {
     'yamaha': generateYamahaExcel,
     'toyota': generateToyotaExcel,
+    'asset-counting': generateAssetCountingExcel,
+    'asset_counting': generateAssetCountingExcel,
+    'asset': generateAssetCountingExcel,
     'default': generateYamahaExcel
 };
 
@@ -19,7 +23,6 @@ function getGenerator(reportType) {
     if (generatorRegistry[key]) {
         return generatorRegistry[key];
     }
-    // Return default generator jika tipe tidak ditemukan
     return generatorRegistry['default'];
 }
 

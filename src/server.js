@@ -32,6 +32,16 @@ app.get('/toyota_checkpoint_data.json', (req, res) => {
     });
 });
 
+// Serve asset_counting_data.json sample file for Asset Counting
+app.get('/asset_counting_data.json', (req, res) => {
+    const filePath = path.join(__dirname, '../asset_counting_data.json');
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            res.status(404).json({ error: 'Not Found', message: 'File asset_counting_data.json tidak ditemukan.' });
+        }
+    });
+});
+
 // Helper function untuk handle request Excel generation
 async function handleExcelGeneration(req, res, reportType = 'yamaha') {
     try {
@@ -45,30 +55,33 @@ async function handleExcelGeneration(req, res, reportType = 'yamaha') {
             sectionFilter = sectionFilter || items.section_filter || items.section;
             subdetailFilter = subdetailFilter || items.subdetail_filter || items.subdetail;
 
-            if (Array.isArray(items.data)) {
+            // Jika tipe asset counting mengirim object root
+            if (reportType.includes('asset')) {
+                // Biarkan items utuh agar meta branch & fiscal_year terbaca di normalizer
+            } else if (Array.isArray(items.data)) {
                 items = items.data;
             } else {
                 items = [items];
             }
         }
 
-        if (!Array.isArray(items) || items.length === 0) {
-            return res.status(400).json({
-                error: 'Bad Request',
-                message: 'Data JSON tidak boleh kosong dan harus berupa Array atau Object dengan key "data".'
-            });
-        }
-
         const excelBuffer = await generateCheckpointExcel(items, reportType, areaFilter, sectionFilter, subdetailFilter);
 
-        const firstDoc = items[0]?.doc_num || items[0]?.name || 'EXPORT';
-        const safeDocNum = String(firstDoc).replace(/[/\\?%*:|"<>]/g, '_');
-        const formattedReportType = String(reportType).toUpperCase();
-        
-        let areaSuffix = '';
-        if (areaFilter && areaFilter !== 'ALL') areaSuffix += `_${String(areaFilter).replace(/[/\\?%*:|"<>]/g, '_')}`;
+        let filename = 'Laporan_Export.xlsx';
+        const formattedReportType = String(reportType).toUpperCase().replace(/-/g, '_');
 
-        const filename = `Laporan_Checkpoint_${formattedReportType}${areaSuffix}_${safeDocNum}.xlsx`;
+        if (reportType.includes('asset')) {
+            const branchName = items.branch_name || items.cabang || items.branch || 'AMBON';
+            filename = `Form_Asset_Counting_${String(branchName).toUpperCase()}_${new Date().getFullYear()}.xlsx`;
+        } else {
+            const firstDoc = (Array.isArray(items) ? items[0]?.doc_num : items?.doc_num) || 'EXPORT';
+            const safeDocNum = String(firstDoc).replace(/[/\\?%*:|"<>]/g, '_');
+            
+            let areaSuffix = '';
+            if (areaFilter && areaFilter !== 'ALL') areaSuffix += `_${String(areaFilter).replace(/[/\\?%*:|"<>]/g, '_')}`;
+
+            filename = `Laporan_Checkpoint_${formattedReportType}${areaSuffix}_${safeDocNum}.xlsx`;
+        }
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
@@ -92,6 +105,16 @@ app.post('/api/v1/generate-excel/yamaha', async (req, res) => {
 // Endpoint spesifik TOYOTA: POST /api/v1/generate-excel/toyota
 app.post('/api/v1/generate-excel/toyota', async (req, res) => {
     return handleExcelGeneration(req, res, 'toyota');
+});
+
+// Endpoint spesifik ASSET COUNTING: POST /api/v1/generate-excel/asset-counting
+app.post('/api/v1/generate-excel/asset-counting', async (req, res) => {
+    return handleExcelGeneration(req, res, 'asset-counting');
+});
+
+// Endpoint spesifik ASSET: POST /api/v1/generate-excel/asset
+app.post('/api/v1/generate-excel/asset', async (req, res) => {
+    return handleExcelGeneration(req, res, 'asset-counting');
 });
 
 // Endpoint dinamis untuk tipe report lain: POST /api/v1/generate-excel/:reportType
@@ -128,6 +151,7 @@ if (require.main === module) {
         console.log(`🚀 Node.js Express API & Web UI running on http://localhost:${PORT}`);
         console.log(`📌 Yamaha Endpoint: POST http://localhost:${PORT}/api/v1/generate-excel/yamaha`);
         console.log(`📌 Toyota Endpoint: POST http://localhost:${PORT}/api/v1/generate-excel/toyota`);
+        console.log(`📌 Asset Counting Endpoint: POST http://localhost:${PORT}/api/v1/generate-excel/asset-counting`);
     });
 }
 

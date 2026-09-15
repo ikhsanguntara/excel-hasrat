@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const btnTypeYamaha = document.getElementById('btnTypeYamaha');
     const btnTypeToyota = document.getElementById('btnTypeToyota');
+    const btnTypeAsset = document.getElementById('btnTypeAsset');
 
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('fileInput');
@@ -28,24 +29,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const metricAreas = document.getElementById('metricAreas');
     const metricGroup = document.getElementById('metricGroup');
 
-    let currentReportType = 'yamaha'; // 'yamaha' or 'toyota'
+    let currentReportType = 'yamaha'; // 'yamaha', 'toyota', 'asset-counting'
     let currentJsonData = null;
     let currentFileName = "";
 
-    // 0. Toggle Tipe Laporan (Yamaha vs Toyota)
+    // 0. Toggle Tipe Laporan (Yamaha vs Toyota vs Asset Counting)
     btnTypeYamaha.addEventListener('click', () => setReportType('yamaha'));
     btnTypeToyota.addEventListener('click', () => setReportType('toyota'));
+    if (btnTypeAsset) {
+        btnTypeAsset.addEventListener('click', () => setReportType('asset-counting'));
+    }
 
     function setReportType(type) {
         currentReportType = type;
+        btnTypeYamaha.classList.toggle('active', type === 'yamaha');
+        btnTypeToyota.classList.toggle('active', type === 'toyota');
+        if (btnTypeAsset) btnTypeAsset.classList.toggle('active', type === 'asset-counting');
+
         if (type === 'yamaha') {
-            btnTypeYamaha.classList.add('active');
-            btnTypeToyota.classList.remove('active');
             sampleBtnText.textContent = 'Gunakan Contoh JSON Yamaha';
-        } else {
-            btnTypeToyota.classList.add('active');
-            btnTypeYamaha.classList.remove('active');
+        } else if (type === 'toyota') {
             sampleBtnText.textContent = 'Gunakan Contoh JSON Toyota';
+        } else if (type === 'asset-counting') {
+            sampleBtnText.textContent = 'Gunakan Contoh JSON Asset Counting';
         }
 
         // Reset data saat ganti tipe jika belum ada file khusus
@@ -93,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Helper untuk me-flatten data jika data berupa Toyota nested
+    // Helper untuk me-flatten data jika data berupa Toyota nested atau Asset Counting
     function extractFlatItems(parsed) {
         let items = [];
 
@@ -116,14 +122,29 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                         });
                     });
+                } else if (entry.nama_asset || entry.nomor_asset_modul || entry.asset_modul) {
+                    // Asset counting item
+                    items.push({
+                        area_name: entry.branch_name || entry.cabang || 'AMBON',
+                        section_name: entry.status_barang || entry.status || 'ADA',
+                        sectiondtl_name: entry.user_pengguna || '',
+                        checkpoint_name: entry.nama_asset || entry.asset_name || '',
+                        result: entry.status_barang || 'ADA',
+                        solution: entry.keterangan || '',
+                        img_path: entry.foto_unit || entry.img_path || '',
+                        ...entry
+                    });
                 } else {
                     items.push(entry);
                 }
             });
-        } else if (parsed && typeof parsed === 'object' && Array.isArray(parsed.data)) {
-            items = parsed.data;
         } else if (parsed && typeof parsed === 'object') {
-            items = [parsed];
+            const list = parsed.assets || parsed.items || parsed.data;
+            if (Array.isArray(list)) {
+                return extractFlatItems(list);
+            } else {
+                items = [parsed];
+            }
         }
 
         return items;
@@ -144,16 +165,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const jsonText = e.target.result;
                 const parsed = JSON.parse(jsonText);
 
-                // Auto-detect tipe jika nama file mengandung toyota
-                if (file.name.toLowerCase().includes('toyota')) {
+                // Auto-detect tipe jika nama file mengandung kata kunci
+                const lowerName = file.name.toLowerCase();
+                if (lowerName.includes('asset')) {
+                    setReportType('asset-counting');
+                } else if (lowerName.includes('toyota')) {
                     setReportType('toyota');
-                } else if (file.name.toLowerCase().includes('yamaha')) {
+                } else if (lowerName.includes('yamaha')) {
                     setReportType('yamaha');
                 }
 
                 currentJsonData = parsed;
                 updateUIWithFile(file.name, file.size, parsed);
-                showToast(`File JSON (${currentReportType.toUpperCase()}) berhasil dimuat!`, 'success');
+                showToast(`File JSON (${currentReportType.toUpperCase().replace(/-/g, ' ')}) berhasil dimuat!`, 'success');
             } catch (err) {
                 showToast('Format JSON tidak valid. Periksa sintaks file.', 'error');
                 console.error(err);
@@ -167,15 +191,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const flatItems = extractFlatItems(rawData);
 
         fileNameEl.textContent = filename;
-        fileSizeEl.textContent = `${formatBytes(bytes)} • ${flatItems.length} Checkpoint Items`;
+        fileSizeEl.textContent = `${formatBytes(bytes)} • ${flatItems.length} Item Data`;
 
         const first = flatItems[0] || {};
-        metricDocNum.textContent = first.doc_num || (currentReportType === 'toyota' ? 'TYT/2026/001' : 'YMH/2026/001');
-        metricCount.textContent = flatItems.length;
-        metricGroup.textContent = currentReportType.toUpperCase();
+        if (currentReportType === 'asset-counting') {
+            metricDocNum.textContent = rawData.branch_name || rawData.cabang || first.branch_name || first.cabang || 'AMBON';
+            metricCount.textContent = flatItems.length;
+            metricGroup.textContent = 'ASSET COUNTING';
+        } else {
+            metricDocNum.textContent = first.doc_num || (currentReportType === 'toyota' ? 'TYT/2026/001' : 'YMH/2026/001');
+            metricCount.textContent = flatItems.length;
+            metricGroup.textContent = currentReportType.toUpperCase();
+        }
 
         // 1. Populate Area Options
-        const areaSet = new Set(flatItems.map(i => i.area_name || i.name).filter(Boolean));
+        const areaSet = new Set(flatItems.map(i => i.area_name || i.name || i.branch_name || i.cabang).filter(Boolean));
         areaSelect.innerHTML = '<option value="ALL">Semua Area (All Areas)</option>';
         areaSet.forEach(areaName => {
             const opt = document.createElement('option');
@@ -202,10 +232,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let filtered = flatItems;
         if (selectedArea && selectedArea !== 'ALL') {
-            filtered = filtered.filter(i => (i.area_name || i.name) === selectedArea);
+            filtered = filtered.filter(i => (i.area_name || i.name || i.branch_name || i.cabang) === selectedArea);
         }
 
-        const sectionSet = new Set(filtered.map(i => i.section_name).filter(Boolean));
+        const sectionSet = new Set(filtered.map(i => i.section_name || i.status_barang).filter(Boolean));
         sectionSelect.innerHTML = '<option value="ALL">Semua Section (All Sections)</option>';
         sectionSet.forEach(secName => {
             const opt = document.createElement('option');
@@ -227,13 +257,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let filtered = flatItems;
         if (selectedArea && selectedArea !== 'ALL') {
-            filtered = filtered.filter(i => (i.area_name || i.name) === selectedArea);
+            filtered = filtered.filter(i => (i.area_name || i.name || i.branch_name || i.cabang) === selectedArea);
         }
         if (selectedSec && selectedSec !== 'ALL') {
-            filtered = filtered.filter(i => i.section_name === selectedSec);
+            filtered = filtered.filter(i => (i.section_name || i.status_barang) === selectedSec);
         }
 
-        const subSet = new Set(filtered.map(i => i.sectiondtl_name).filter(Boolean));
+        const subSet = new Set(filtered.map(i => i.sectiondtl_name || i.user_pengguna).filter(Boolean));
         subdetailSelect.innerHTML = '<option value="ALL">Semua Sub-bagian (All)</option>';
         subSet.forEach(subName => {
             const opt = document.createElement('option');
@@ -260,8 +290,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Gunakan Contoh JSON
     useSampleBtn.addEventListener('click', async () => {
-        const sampleUrl = currentReportType === 'toyota' ? '/toyota_checkpoint_data.json' : '/checkpoint_data.json';
-        const sampleName = currentReportType === 'toyota' ? 'toyota_checkpoint_data.json' : 'checkpoint_data.json';
+        let sampleUrl = '/checkpoint_data.json';
+        let sampleName = 'checkpoint_data.json';
+
+        if (currentReportType === 'toyota') {
+            sampleUrl = '/toyota_checkpoint_data.json';
+            sampleName = 'toyota_checkpoint_data.json';
+        } else if (currentReportType === 'asset-counting') {
+            sampleUrl = '/asset_counting_data.json';
+            sampleName = 'asset_counting_data.json';
+        }
 
         try {
             const resp = await fetch(sampleUrl);
