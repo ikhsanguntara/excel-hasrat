@@ -173,6 +173,17 @@ async function generateAssetCountingExcel(rawPayload) {
         items.map(item => processCheckpointPhotos(item.img_path))
     );
 
+    // Hitung lebar maksimal kolom foto berdasarkan jumlah foto per baris
+    assetImages.forEach(imgData => {
+        if (imgData) {
+            const neededColW = Math.round(imgData.widthPx / 7) + 6;
+            if (neededColW > maxFotoColWidth) {
+                maxFotoColWidth = neededColW;
+            }
+        }
+    });
+    worksheet.getColumn(11).width = maxFotoColWidth;
+
     // --- 3. DATA BARIS ---
     for (let idx = 0; idx < items.length; idx++) {
         currentRow++;

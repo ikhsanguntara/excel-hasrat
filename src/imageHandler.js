@@ -163,18 +163,32 @@ async function processSinglePhoto(imgRef) {
 }
 
 /**
- * Memproses string path foto (bisa multi foto dipisah koma `,`, titik koma `;`, atau baris baru).
+ * Memproses path/URL foto (bisa string koma/baris baru atau Array URL).
+ * Menggabungkan hingga N foto menjadi composite grid horizontal rapi.
  * Mengembalikan { buffer, widthPx, heightPx, count }
  */
-async function processCheckpointPhotos(imgPathStr) {
-    if (!imgPathStr || typeof imgPathStr !== 'string') {
+async function processCheckpointPhotos(imgPathInput) {
+    if (!imgPathInput) {
         return null;
     }
 
-    const rawPaths = imgPathStr
-        .split(/[,;\n]+/)
-        .map(p => p.trim())
-        .filter(p => p.length > 0);
+    let rawPaths = [];
+    if (Array.isArray(imgPathInput)) {
+        rawPaths = imgPathInput
+            .map(p => {
+                if (typeof p === 'string') return p.trim();
+                if (p && typeof p === 'object') return (p.url || p.img_path || p.foto || p.path || '').trim();
+                return String(p || '').trim();
+            })
+            .filter(p => p.length > 0);
+    } else if (typeof imgPathInput === 'string') {
+        rawPaths = imgPathInput
+            .split(/[,;\n]+/)
+            .map(p => p.trim())
+            .filter(p => p.length > 0);
+    } else {
+        return null;
+    }
 
     const paths = [...new Set(rawPaths)];
 

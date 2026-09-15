@@ -42,6 +42,26 @@ app.get('/asset_counting_data.json', (req, res) => {
     });
 });
 
+// Serve dummy_asset_counting_15.json
+app.get('/dummy_asset_counting_15.json', (req, res) => {
+    const filePath = path.join(__dirname, '../dummy_asset_counting_15.json');
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            res.status(404).json({ error: 'Not Found', message: 'File dummy_asset_counting_15.json tidak ditemukan.' });
+        }
+    });
+});
+
+// Serve dummy_checkpoint_15.json
+app.get('/dummy_checkpoint_15.json', (req, res) => {
+    const filePath = path.join(__dirname, '../dummy_checkpoint_15.json');
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            res.status(404).json({ error: 'Not Found', message: 'File dummy_checkpoint_15.json tidak ditemukan.' });
+        }
+    });
+});
+
 // Helper function untuk handle request Excel generation
 async function handleExcelGeneration(req, res, reportType = 'yamaha') {
     try {
