@@ -93,8 +93,8 @@ function normalizeAssetCountingData(rawPayload) {
         // Kolom I: USER/PENGGUNA -> asset_pic
         const userPengguna = (entry.asset_pic && String(entry.asset_pic).trim()) ? String(entry.asset_pic).trim() : '-';
 
-        // Kolom J: STATUS BARANG -> asset_condition (default ADA)
-        const statusBarang = (entry.asset_condition && String(entry.asset_condition).trim()) ? String(entry.asset_condition).trim() : 'ADA';
+        // Kolom J: STATUS BARANG -> asset_condition (jika null / kosong tampil '-')
+        const statusBarang = (entry.asset_condition && String(entry.asset_condition).trim()) ? String(entry.asset_condition).trim() : '-';
 
         // Kolom K: FOTO UNIT / KETERANGAN -> attachment
         const imgRef = entry.attachment || '';

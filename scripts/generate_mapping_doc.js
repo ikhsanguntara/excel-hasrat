@@ -110,7 +110,7 @@ async function createMappingDoc() {
         ['Kolom G', 'AKUMULASI PENYUSUTAN', 'akumulasi_penyusutan', 'Number / String', '.000000', 'Akumulasi depresiasi (Format Angka #,##0, .000000 -> 0)'],
         ['Kolom H', 'NBV', 'nbv', 'Number / String', '2696351206.000000', 'Net Book Value / Nilai Buku (Format Angka #,##0)'],
         ['Kolom I', 'USER/PENGGUNA', 'asset_pic', 'String', 'Sunardi', 'Nama PIC / pemegang aset (Jika null tampil -)'],
-        ['Kolom J', 'STATUS BARANG', 'asset_condition', 'String', 'ADA', 'Status keberadaan barang (Highlight Kuning #FFFF00, default: ADA)'],
+        ['Kolom J', 'STATUS BARANG', 'asset_condition', 'String', 'ADA / BAIK / RUSAK / null', 'Kondisi barang hasil cek (Jika null tampil -, Cell Kuning #FFFF00)'],
         ['Kolom K', 'FOTO UNIT / KETERANGAN', 'attachment', 'Array [URL]', '[\"https://.../foto1.jpg\"]', 'Foto unit ter-embed rapi (1-5 foto per baris)'],
         ['Kolom L', 'KETERANGAN', 'asset_location', 'String', 'CAB. BIAK', 'Lokasi fisik / catatan aset di cabang']
     ];
