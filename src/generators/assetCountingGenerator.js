@@ -14,6 +14,7 @@ function parseCleanNumber(val) {
 
 /**
  * Normalizer untuk mengubah data JSON Asset Counting menjadi flat array item yang seragam.
+ * Menggunakan mapping 1-to-1 pasti dari struktur JSON BE stockDetails.
  */
 function normalizeAssetCountingData(rawPayload) {
     let itemsArray = [];
@@ -26,31 +27,27 @@ function normalizeAssetCountingData(rawPayload) {
 
     let inputData = rawPayload;
     if (!Array.isArray(inputData) && typeof inputData === 'object') {
-        if (inputData.office_branch_name || inputData.office_name || inputData.branch_name || inputData.cabang || inputData.branch) {
-            meta.branch = inputData.office_branch_name || inputData.office_name || inputData.branch_name || inputData.cabang || inputData.branch;
+        // 1. Cabang diambil dari root: office_branch_name
+        if (inputData.office_branch_name) {
+            meta.branch = inputData.office_branch_name;
+        } else if (inputData.office_name || inputData.branch_name) {
+            meta.branch = inputData.office_name || inputData.branch_name;
         }
 
-        const rawYear = inputData.fiscal_year || inputData.tahun_buku || inputData.tahun || inputData.year;
-        if (rawYear) {
-            meta.fiscal_year = rawYear;
-        } else if (inputData.doc_date) {
+        // 2. Tahun Buku diambil dari root: doc_date
+        if (inputData.doc_date) {
             meta.fiscal_year = new Date(inputData.doc_date).getFullYear();
-        } else if (inputData.periode_start) {
-            meta.fiscal_year = new Date(inputData.periode_start).getFullYear();
-        } else if (inputData.created_date) {
-            meta.fiscal_year = new Date(inputData.created_date).getFullYear();
+        } else if (inputData.fiscal_year) {
+            meta.fiscal_year = inputData.fiscal_year;
         }
 
+        // 3. Data item diambil dari root: stockDetails
         if (Array.isArray(inputData.stockDetails)) {
             inputData = inputData.stockDetails;
         } else if (Array.isArray(inputData.details)) {
             inputData = inputData.details;
         } else if (Array.isArray(inputData.data)) {
             inputData = inputData.data;
-        } else if (Array.isArray(inputData.items)) {
-            inputData = inputData.items;
-        } else if (Array.isArray(inputData.assets)) {
-            inputData = inputData.assets;
         } else {
             inputData = [inputData];
         }
@@ -59,46 +56,51 @@ function normalizeAssetCountingData(rawPayload) {
     if (!Array.isArray(inputData)) return { items: [], meta };
 
     inputData.forEach((entry, idx) => {
-        if (entry.office_branch_name || entry.office_name || entry.branch_name || entry.cabang || entry.branch) {
-            meta.branch = entry.office_branch_name || entry.office_name || entry.branch_name || entry.cabang || entry.branch;
-        }
-        if (entry.fiscal_year || entry.tahun_buku || entry.tahun || entry.year) {
-            meta.fiscal_year = entry.fiscal_year || entry.tahun_buku || entry.tahun || entry.year;
-        }
+        // Kolom A: NO
+        const noVal = idx + 1;
 
-        const noVal = entry.no || entry.nomor || (idx + 1);
-        const modulNum = entry.item_code || entry.item_code_sap || entry.serial || entry.nomor_asset_modul || entry.asset_modul || entry.asset_num || entry.asset_code || entry.kode_asset || entry.no_asset || '';
-        const scanNum = entry.serial || entry.nomor_asset_scan || entry.asset_scan || entry.scan_num || entry.barcode || entry.item_code || entry.asset_scan_code || '';
-        const assetName = entry.item_name || entry.nama_asset || entry.asset_name || entry.name || entry.deskripsi || '';
+        // Kolom B: NOMOR ASSET MODUL -> item_code
+        const modulNum = entry.item_code || '';
 
-        // Clean date format (hilangkan timestamp jika ada, misal: '1993-10-21 00:00:00.000' -> '1993-10-21')
-        let rawDate = entry.tanggal_perolehan || entry.TanggalPerolehan || entry.tgl_perolehan || entry.acquisition_date || entry.date || '';
+        // Kolom C: NOMOR ASSET SCAN -> serial (fallback ke item_code jika serial kosong)
+        const scanNum = entry.serial || entry.item_code || '';
+
+        // Kolom D: NAMA ASSET -> item_name
+        const assetName = entry.item_name || '';
+
+        // Kolom E: TANGGAL PEROLEHAN -> tanggal_perolehan (dibersihkan dari timestamp jam)
+        let rawDate = entry.tanggal_perolehan || entry.TanggalPerolehan || '';
         let acqDate = '';
         if (rawDate) {
-            if (typeof rawDate === 'string' && rawDate.includes(' ')) {
-                acqDate = rawDate.split(' ')[0];
-            } else if (typeof rawDate === 'string' && rawDate.includes('T')) {
-                acqDate = rawDate.split('T')[0];
-            } else {
-                acqDate = String(rawDate).trim();
-            }
+            acqDate = String(rawDate).split(' ')[0].split('T')[0].trim();
         }
 
-        const acqCost = parseCleanNumber(entry.harga_perolehan !== undefined ? entry.harga_perolehan : (entry.HargaPerolehan !== undefined ? entry.HargaPerolehan : (entry.acquisition_cost || entry.cost || entry.price)));
-        const accDepr = parseCleanNumber(entry.akumulasi_penyusutan !== undefined ? entry.akumulasi_penyusutan : (entry.AkumulasiPenyusutan !== undefined ? entry.AkumulasiPenyusutan : (entry.accumulated_depreciation || entry.depreciation)));
-        
+        // Kolom F: HARGA PEROLEHAN -> harga_perolehan
+        const acqCost = parseCleanNumber(entry.harga_perolehan !== undefined ? entry.harga_perolehan : entry.HargaPerolehan);
+
+        // Kolom G: AKUMULASI PENYUSUTAN -> akumulasi_penyusutan
+        const accDepr = parseCleanNumber(entry.akumulasi_penyusutan !== undefined ? entry.akumulasi_penyusutan : entry.AkumulasiPenyusutan);
+
+        // Kolom H: NBV -> nbv (jika tidak ada, dihitung acqCost - accDepr)
         let nbvVal = 0;
-        const rawNbv = entry.nbv !== undefined ? entry.nbv : (entry.Nbv !== undefined ? entry.Nbv : (entry.nilai_buku || entry.net_book_value));
+        const rawNbv = entry.nbv !== undefined ? entry.nbv : entry.Nbv;
         if (rawNbv !== undefined && rawNbv !== null && rawNbv !== '') {
             nbvVal = parseCleanNumber(rawNbv);
         } else {
             nbvVal = acqCost - accDepr;
         }
 
-        const userPengguna = entry.asset_pic || entry.user_pengguna || entry.pengguna || entry.user || entry.pic || entry.pemegang_asset || entry.check_user_name || (entry.asset_location ? `(${entry.asset_location})` : '-');
-        const statusBarang = entry.asset_condition || entry.status_barang || entry.status || entry.kondisi || (entry.is_checked ? 'ADA' : 'ADA');
-        const imgRef = (entry.attachment && entry.attachment.length > 0) ? entry.attachment : (entry.foto_unit || entry.img_path || entry.foto || entry.hasilFoto || entry.image || '');
-        const keterangan = entry.remarks || entry.checked_remarks || entry.keterangan || entry.notes || entry.asset_location || entry.remark || entry.description || '';
+        // Kolom I: USER/PENGGUNA -> asset_pic
+        const userPengguna = (entry.asset_pic && String(entry.asset_pic).trim()) ? String(entry.asset_pic).trim() : '-';
+
+        // Kolom J: STATUS BARANG -> asset_condition (default ADA)
+        const statusBarang = (entry.asset_condition && String(entry.asset_condition).trim()) ? String(entry.asset_condition).trim() : 'ADA';
+
+        // Kolom K: FOTO UNIT / KETERANGAN -> attachment
+        const imgRef = entry.attachment || '';
+
+        // Kolom L: KETERANGAN -> asset_location (atau remarks jika ada)
+        const keterangan = (entry.remarks && String(entry.remarks).trim()) ? String(entry.remarks).trim() : (entry.asset_location || '');
 
         itemsArray.push({
             no: noVal,

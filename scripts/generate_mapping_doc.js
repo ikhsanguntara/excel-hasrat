@@ -31,28 +31,28 @@ async function createMappingDoc() {
     };
 
     // ==========================================
-    // SHEET 1: KAMUS DATA & MAPPING JSON -> EXCEL
+    // SHEET 1: KAMUS DATA & MAPPING JSON -> EXCEL (1-TO-1 PASTI)
     // ==========================================
     const wsMapping = workbook.addWorksheet('1. Kamus Data & Mapping SA', { views: [{ showGridLines: true }] });
 
     // Judul Dokumen
-    wsMapping.mergeCells('A1:G1');
+    wsMapping.mergeCells('A1:F1');
     const titleCell = wsMapping.getCell('A1');
-    titleCell.value = 'SPESIFIKASI MAPPING JSON KE EXCEL - FORM ASSET COUNTING';
+    titleCell.value = 'SPESIFIKASI MAPPING 1-TO-1 JSON KE EXCEL - FORM ASSET COUNTING';
     titleCell.font = { name: FONT_FAMILY, size: 14, bold: true, color: { argb: 'FFFFFFFF' } };
     titleCell.fill = headerFillNavy;
     titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
     wsMapping.getRow(1).height = 36;
 
-    wsMapping.getCell('A2').value = 'Dokumen acuan untuk System Analyst (SA) & Backend Developer dalam integrasi data API Asset Counting.';
+    wsMapping.getCell('A2').value = 'Dokumen acuan pasti 1-to-1 untuk System Analyst (SA) & Backend Developer dari objek root dan array stockDetails.';
     wsMapping.getCell('A2').font = { name: FONT_FAMILY, size: 10, italic: true, color: { argb: 'FF64748B' } };
     wsMapping.getRow(2).height = 20;
 
     // Tabel 1: Metadata Header
-    wsMapping.getCell('A4').value = 'A. METADATA HEADER (Bagian Atas Laporan)';
+    wsMapping.getCell('A4').value = 'A. METADATA HEADER (Root JSON Object)';
     wsMapping.getCell('A4').font = { name: FONT_FAMILY, size: 11, bold: true, color: { argb: 'FF1E293B' } };
 
-    const metaHeaders = ['Posisi Sel Excel', 'Teks di Excel', 'Field JSON Utama (BE)', 'Field JSON Alternatif', 'Tipe Data', 'Contoh Nilai', 'Keterangan SA/BE'];
+    const metaHeaders = ['Posisi Sel Excel', 'Teks di Excel', 'Field JSON Backend (Pasti)', 'Tipe Data', 'Contoh Nilai', 'Keterangan'];
     const rMetaHeader = wsMapping.getRow(5);
     rMetaHeader.height = 26;
     metaHeaders.forEach((h, i) => {
@@ -65,9 +65,9 @@ async function createMappingDoc() {
     });
 
     const metaData = [
-        ['Sel A1', 'PT HASJRAT ABADI CABANG [CABANG]', 'office_branch_name', 'office_name / branch_name / cabang', 'String', 'Biak', 'Nama cabang operasional. Huruf otomatis dikonversi ke UPPERCASE.'],
-        ['Sel A2', 'FORM ASSET COUNTING', '(Fixed Text)', '-', 'String', 'FORM ASSET COUNTING', 'Judul tetap laporan di baris 2.'],
-        ['Sel A3', 'TAHUN BUKU [TAHUN]', 'fiscal_year', 'doc_date / periode_start / created_date', 'Integer / Date', '2025', 'Tahun buku laporan. Jika tidak dikirim, diekstrak dari tahun doc_date atau tahun berjalan.']
+        ['Sel A1', 'PT HASJRAT ABADI CABANG [CABANG]', 'office_branch_name', 'String', 'Biak', 'Nama cabang operasional (Otomatis UPPERCASE di Excel).'],
+        ['Sel A2', 'FORM ASSET COUNTING', '(Fixed Text)', 'String', 'FORM ASSET COUNTING', 'Judul tetap laporan di baris 2.'],
+        ['Sel A3', 'TAHUN BUKU [TAHUN]', 'doc_date', 'String (Date)', '2025-11-18 09:03:54.000', 'Tahun buku diambil dari tahun doc_date (misal: 2025).']
     ];
 
     metaData.forEach((row, idx) => {
@@ -85,10 +85,10 @@ async function createMappingDoc() {
 
     // Tabel 2: Detail Kolom Data (Array: stockDetails)
     const startRowCols = 11;
-    wsMapping.getCell(`A${startRowCols - 1}`).value = 'B. DETAIL 12 KOLOM TABEL ASET (Array: stockDetails / details)';
+    wsMapping.getCell(`A${startRowCols - 1}`).value = 'B. DETAIL 12 KOLOM TABEL ASET (Array: stockDetails)';
     wsMapping.getCell(`A${startRowCols - 1}`).font = { name: FONT_FAMILY, size: 11, bold: true, color: { argb: 'FF1E293B' } };
 
-    const colTableHeaders = ['Kolom Excel', 'Nama Kolom di Excel', 'Field JSON Utama (BE)', 'Field JSON Alternatif', 'Tipe Data', 'Format / Transformasi di Excel', 'Contoh Nilai JSON'];
+    const colTableHeaders = ['Kolom Excel', 'Nama Kolom di Excel', 'Field JSON Backend (Pasti)', 'Tipe Data', 'Contoh Nilai JSON', 'Format & Keterangan di Excel'];
     const rColHeader = wsMapping.getRow(startRowCols);
     rColHeader.height = 26;
     colTableHeaders.forEach((h, i) => {
@@ -101,18 +101,18 @@ async function createMappingDoc() {
     });
 
     const colDataMapping = [
-        ['Kolom A', 'NO', 'no', 'stockdetail_id / nomor urut', 'Integer', 'Nomor urut numerik (1, 2, 3, ...)', '1'],
-        ['Kolom B', 'NOMOR ASSET MODUL', 'item_code', 'item_code_sap / serial / nomor_asset_modul', 'String', 'Teks kode aset dari sistem/SAP', '30200B9902001'],
-        ['Kolom C', 'NOMOR ASSET SCAN', 'serial', 'nomor_asset_scan / item_code / barcode', 'String', 'Teks barcode scan (Cell Highlight Kuning #FFFF00)', '30200B9902001'],
-        ['Kolom D', 'NAMA ASSET', 'item_name', 'nama_asset / asset_name / name', 'String', 'Deskripsi/nama aset fisik', 'BANGUNAN'],
-        ['Kolom E', 'TANGGAL PEROLEHAN', 'tanggal_perolehan', 'TanggalPerolehan / acquisition_date', 'Date / String', 'Format YYYY-MM-DD (timestamp jam dibuang)', '1993-10-21 00:00:00.000'],
-        ['Kolom F', 'HARGA PEROLEHAN', 'harga_perolehan', 'HargaPerolehan / acquisition_cost', 'Number / String', 'Format Angka Mata Uang (#,##0)', '2696351206.000000'],
-        ['Kolom G', 'AKUMULASI PENYUSUTAN', 'akumulasi_penyusutan', 'AkumulasiPenyusutan / depreciation', 'Number / String', 'Format Angka Mata Uang (#,##0). String ".000000" diubah ke 0', '.000000'],
-        ['Kolom H', 'NBV', 'nbv', 'Nbv / (HargaPerolehan - AkumulasiPenyusutan)', 'Number / String', 'Net Book Value / Nilai Buku (#,##0)', '2696351206.000000'],
-        ['Kolom I', 'USER/PENGGUNA', 'asset_pic', 'user_pengguna / pic / asset_location', 'String', 'Nama penanggung jawab atau lokasi fisik aset', 'Sunardi / (CAB. BIAK)'],
-        ['Kolom J', 'STATUS BARANG', 'asset_condition', 'status_barang / is_checked', 'String', 'Kondisi barang (Cell Highlight Kuning #FFFF00, default: ADA)', 'ADA'],
-        ['Kolom K', 'FOTO UNIT / KETERANGAN', 'attachment', 'foto_unit / img_path / foto', 'Array / String', 'Foto di-embed otomatis (1-5 thumbnail rapi)', '["https://hrms.hasjrat.co.id/horor/...jpg"]'],
-        ['Kolom L', 'KETERANGAN', 'remarks', 'checked_remarks / asset_location / keterangan', 'String', 'Catatan tambahan / lokasi fisik', 'CAB. BIAK']
+        ['Kolom A', 'NO', '(Nomor Urut Iterasi)', 'Integer', '1, 2, 3, ...', 'Nomor urut baris di Excel (1, 2, 3, ...)'],
+        ['Kolom B', 'NOMOR ASSET MODUL', 'item_code', 'String', '30200B9902001', 'Nomor / kode aset dari modul SAP'],
+        ['Kolom C', 'NOMOR ASSET SCAN', 'serial', 'String', '30200B9902001', 'Nomor barcode hasil scan fisik (Highlight Kuning #FFFF00)'],
+        ['Kolom D', 'NAMA ASSET', 'item_name', 'String', 'BANGUNAN', 'Nama / deskripsi barang aset'],
+        ['Kolom E', 'TANGGAL PEROLEHAN', 'tanggal_perolehan', 'String (Date)', '1993-10-21 00:00:00.000', 'Tanggal perolehan (Format YYYY-MM-DD, jam dibersihkan)'],
+        ['Kolom F', 'HARGA PEROLEHAN', 'harga_perolehan', 'Number / String', '2696351206.000000', 'Harga beli perolehan (Format Angka #,##0)'],
+        ['Kolom G', 'AKUMULASI PENYUSUTAN', 'akumulasi_penyusutan', 'Number / String', '.000000', 'Akumulasi depresiasi (Format Angka #,##0, .000000 -> 0)'],
+        ['Kolom H', 'NBV', 'nbv', 'Number / String', '2696351206.000000', 'Net Book Value / Nilai Buku (Format Angka #,##0)'],
+        ['Kolom I', 'USER/PENGGUNA', 'asset_pic', 'String', 'Sunardi', 'Nama PIC / pemegang aset (Jika null tampil -)'],
+        ['Kolom J', 'STATUS BARANG', 'asset_condition', 'String', 'ADA', 'Status keberadaan barang (Highlight Kuning #FFFF00, default: ADA)'],
+        ['Kolom K', 'FOTO UNIT / KETERANGAN', 'attachment', 'Array [URL]', '[\"https://.../foto1.jpg\"]', 'Foto unit ter-embed rapi (1-5 foto per baris)'],
+        ['Kolom L', 'KETERANGAN', 'asset_location', 'String', 'CAB. BIAK', 'Lokasi fisik / catatan aset di cabang']
     ];
 
     colDataMapping.forEach((row, idx) => {
@@ -131,11 +131,10 @@ async function createMappingDoc() {
     wsMapping.columns = [
         { width: 14 },
         { width: 26 },
-        { width: 24 },
-        { width: 34 },
+        { width: 28 },
         { width: 16 },
-        { width: 38 },
-        { width: 28 }
+        { width: 28 },
+        { width: 44 }
     ];
 
     // ==========================================
@@ -181,11 +180,11 @@ async function createMappingDoc() {
     });
 
     const sampleRows = [
-        [1, '30200B9902001', '30200B9902001', 'BANGUNAN', '1993-10-21', 2696351206, 0, 2696351206, '(CAB. BIAK)', 'ADA', '[Foto Unit Disematkan]', 'CAB. BIAK'],
-        [2, '30200B1502001', '30200B1502001', 'RENOVASI BANGUNAN GEDUNG', '-', 0, 0, 0, '(CAB. BIAK)', 'ADA', '-', 'CAB. BIAK'],
+        [1, '30200B9902001', '30200B9902001', 'BANGUNAN', '1993-10-21', 2696351206, 0, 2696351206, '-', 'ADA', '[Foto Unit Disematkan]', 'CAB. BIAK'],
+        [2, '30200B1502001', '30200B1502001', 'RENOVASI BANGUNAN GEDUNG', '-', 0, 0, 0, '-', 'ADA', '-', 'CAB. BIAK'],
         [3, '30200K0302001', '30200K0302001', 'NOUVO', '2014-07-18', 10346600, 1939987, 8406613, 'Sunardi', 'ADA', '[Foto Unit Disematkan]', 'CAB. BIAK'],
-        [4, '30200K1502001', '30200K1502001', 'AVANZA (X-TARIKAN HMF)', '-', 0, 0, 0, '(CAB. BIAK)', 'ADA', '-', 'CAB. BIAK'],
-        [5, '30200P0402001', '30200P0402001', '1 set Meja Negosiasi ( 4 kursi & 1 Meja )', '-', 0, 0, 0, '(CAB. BIAK)', 'ADA', '-', 'CAB. BIAK']
+        [4, '30200K1502001', '30200K1502001', 'AVANZA (X-TARIKAN HMF)', '-', 0, 0, 0, '-', 'ADA', '-', 'CAB. BIAK'],
+        [5, '30200P0402001', '30200P0402001', '1 set Meja Negosiasi ( 4 kursi & 1 Meja )', '-', 0, 0, 0, '-', 'ADA', '-', 'CAB. BIAK']
     ];
 
     sampleRows.forEach((sRow, idx) => {
@@ -262,15 +261,14 @@ async function createMappingDoc() {
                 serial: "30200B9902001",
                 asset_pic: "Sunardi",
                 asset_location: "CAB. BIAK",
-                TanggalPerolehan: "1993-10-21 00:00:00.000",
-                HargaPerolehan: "2696351206.000000",
-                AkumulasiPenyusutan: ".000000",
-                Nbv: "2696351206.000000",
+                tanggal_perolehan: "1993-10-21 00:00:00.000",
+                harga_perolehan: "2696351206.000000",
+                akumulasi_penyusutan: ".000000",
+                nbv: "2696351206.000000",
                 asset_condition: "ADA",
                 attachment: [
                     "https://hrms.hasjrat.co.id/horor/hororupload/section/sample1.jpg"
-                ],
-                remarks: "Kondisi fisik gedung baik"
+                ]
             }
         ]
     }, null, 2);
