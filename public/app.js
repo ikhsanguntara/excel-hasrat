@@ -122,16 +122,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                         });
                     });
-                } else if (entry.nama_asset || entry.nomor_asset_modul || entry.asset_modul) {
+                } else if (entry.nama_asset || entry.item_name || entry.nomor_asset_modul || entry.item_code || entry.asset_modul) {
                     // Asset counting item
                     items.push({
-                        area_name: entry.branch_name || entry.cabang || 'AMBON',
-                        section_name: entry.status_barang || entry.status || 'ADA',
-                        sectiondtl_name: entry.user_pengguna || '',
-                        checkpoint_name: entry.nama_asset || entry.asset_name || '',
-                        result: entry.status_barang || 'ADA',
-                        solution: entry.keterangan || '',
-                        img_path: entry.foto_unit || entry.img_path || '',
+                        area_name: entry.asset_location || entry.office_branch_name || entry.branch_name || entry.cabang || 'BIAK',
+                        section_name: entry.asset_condition || entry.status_barang || entry.status || 'ADA',
+                        sectiondtl_name: entry.asset_pic || entry.user_pengguna || '',
+                        checkpoint_name: entry.item_name || entry.nama_asset || entry.asset_name || '',
+                        result: entry.asset_condition || entry.status_barang || 'ADA',
+                        solution: entry.remarks || entry.checked_remarks || entry.keterangan || '',
+                        img_path: entry.attachment || entry.foto_unit || entry.img_path || '',
                         ...entry
                     });
                 } else {
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         } else if (parsed && typeof parsed === 'object') {
-            const list = parsed.assets || parsed.items || parsed.data;
+            const list = parsed.stockDetails || parsed.details || parsed.assets || parsed.items || parsed.data;
             if (Array.isArray(list)) {
                 return extractFlatItems(list);
             } else {
@@ -165,9 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const jsonText = e.target.result;
                 const parsed = JSON.parse(jsonText);
 
-                // Auto-detect tipe jika nama file mengandung kata kunci
+                // Auto-detect tipe jika nama file mengandung kata kunci atau struktur payload
                 const lowerName = file.name.toLowerCase();
-                if (lowerName.includes('asset')) {
+                if (lowerName.includes('asset') || parsed.stockDetails || parsed.object_code === 'STOCKASSET') {
                     setReportType('asset-counting');
                 } else if (lowerName.includes('toyota')) {
                     setReportType('toyota');
@@ -195,7 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const first = flatItems[0] || {};
         if (currentReportType === 'asset-counting') {
-            metricDocNum.textContent = rawData.branch_name || rawData.cabang || first.branch_name || first.cabang || 'AMBON';
+            const branchName = rawData.office_branch_name || rawData.office_name || rawData.branch_name || rawData.cabang || first.office_branch_name || first.branch_name || 'BIAK';
+            metricDocNum.textContent = rawData.doc_num || branchName;
             metricCount.textContent = flatItems.length;
             metricGroup.textContent = 'ASSET COUNTING';
         } else {

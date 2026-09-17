@@ -177,7 +177,9 @@ async function processCheckpointPhotos(imgPathInput) {
         rawPaths = imgPathInput
             .map(p => {
                 if (typeof p === 'string') return p.trim();
-                if (p && typeof p === 'object') return (p.url || p.img_path || p.foto || p.path || '').trim();
+                if (p && typeof p === 'object') {
+                    return (p.file_url || p.url || p.img_path || p.foto || p.path || p.filePath || p.attachment_url || p.file_name || p.src || '').trim();
+                }
                 return String(p || '').trim();
             })
             .filter(p => p.length > 0);

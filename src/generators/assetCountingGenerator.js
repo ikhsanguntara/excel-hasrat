@@ -2,6 +2,17 @@ const ExcelJS = require('exceljs');
 const { processCheckpointPhotos } = require('../imageHandler');
 
 /**
+ * Helper untuk parsing angka bersih dari string atau number (misal ".000000" -> 0, "2696351206.000000" -> 2696351206)
+ */
+function parseCleanNumber(val) {
+    if (val === null || val === undefined || val === '') return 0;
+    const str = String(val).trim();
+    if (str === '' || str === '.000000' || str === '.') return 0;
+    const num = Number(str);
+    return isNaN(num) ? 0 : num;
+}
+
+/**
  * Normalizer untuk mengubah data JSON Asset Counting menjadi flat array item yang seragam.
  */
 function normalizeAssetCountingData(rawPayload) {
@@ -15,14 +26,26 @@ function normalizeAssetCountingData(rawPayload) {
 
     let inputData = rawPayload;
     if (!Array.isArray(inputData) && typeof inputData === 'object') {
-        if (inputData.branch_name || inputData.cabang || inputData.branch) {
-            meta.branch = inputData.branch_name || inputData.cabang || inputData.branch;
-        }
-        if (inputData.fiscal_year || inputData.tahun_buku || inputData.tahun || inputData.year) {
-            meta.fiscal_year = inputData.fiscal_year || inputData.tahun_buku || inputData.tahun || inputData.year;
+        if (inputData.office_branch_name || inputData.office_name || inputData.branch_name || inputData.cabang || inputData.branch) {
+            meta.branch = inputData.office_branch_name || inputData.office_name || inputData.branch_name || inputData.cabang || inputData.branch;
         }
 
-        if (Array.isArray(inputData.data)) {
+        const rawYear = inputData.fiscal_year || inputData.tahun_buku || inputData.tahun || inputData.year;
+        if (rawYear) {
+            meta.fiscal_year = rawYear;
+        } else if (inputData.doc_date) {
+            meta.fiscal_year = new Date(inputData.doc_date).getFullYear();
+        } else if (inputData.periode_start) {
+            meta.fiscal_year = new Date(inputData.periode_start).getFullYear();
+        } else if (inputData.created_date) {
+            meta.fiscal_year = new Date(inputData.created_date).getFullYear();
+        }
+
+        if (Array.isArray(inputData.stockDetails)) {
+            inputData = inputData.stockDetails;
+        } else if (Array.isArray(inputData.details)) {
+            inputData = inputData.details;
+        } else if (Array.isArray(inputData.data)) {
             inputData = inputData.data;
         } else if (Array.isArray(inputData.items)) {
             inputData = inputData.items;
@@ -36,25 +59,46 @@ function normalizeAssetCountingData(rawPayload) {
     if (!Array.isArray(inputData)) return { items: [], meta };
 
     inputData.forEach((entry, idx) => {
-        if (entry.branch_name || entry.cabang || entry.branch) {
-            meta.branch = entry.branch_name || entry.cabang || entry.branch;
+        if (entry.office_branch_name || entry.office_name || entry.branch_name || entry.cabang || entry.branch) {
+            meta.branch = entry.office_branch_name || entry.office_name || entry.branch_name || entry.cabang || entry.branch;
         }
         if (entry.fiscal_year || entry.tahun_buku || entry.tahun || entry.year) {
             meta.fiscal_year = entry.fiscal_year || entry.tahun_buku || entry.tahun || entry.year;
         }
 
         const noVal = entry.no || entry.nomor || (idx + 1);
-        const modulNum = entry.nomor_asset_modul || entry.asset_modul || entry.asset_num || entry.asset_code || entry.kode_asset || entry.no_asset || '';
-        const scanNum = entry.nomor_asset_scan || entry.asset_scan || entry.scan_num || entry.barcode || entry.asset_scan_code || '';
-        const assetName = entry.nama_asset || entry.asset_name || entry.name || entry.deskripsi || '';
-        const acqDate = entry.tanggal_perolehan || entry.tgl_perolehan || entry.acquisition_date || entry.date || '';
-        const acqCost = Number(entry.harga_perolehan || entry.acquisition_cost || entry.cost || entry.price || 0);
-        const accDepr = Number(entry.akumulasi_penyusutan || entry.accumulated_depreciation || entry.depreciation || 0);
-        const nbvVal = Number(entry.nbv || entry.nilai_buku || entry.net_book_value || (acqCost - accDepr));
-        const userPengguna = entry.user_pengguna || entry.pengguna || entry.user || entry.pic || entry.pemegang_asset || entry.check_user_name || '';
-        const statusBarang = entry.status_barang || entry.status || entry.kondisi || 'ADA';
-        const imgRef = entry.foto_unit || entry.img_path || entry.foto || entry.hasilFoto || entry.image || '';
-        const keterangan = entry.keterangan || entry.notes || entry.remark || entry.description || '';
+        const modulNum = entry.item_code || entry.item_code_sap || entry.serial || entry.nomor_asset_modul || entry.asset_modul || entry.asset_num || entry.asset_code || entry.kode_asset || entry.no_asset || '';
+        const scanNum = entry.serial || entry.nomor_asset_scan || entry.asset_scan || entry.scan_num || entry.barcode || entry.item_code || entry.asset_scan_code || '';
+        const assetName = entry.item_name || entry.nama_asset || entry.asset_name || entry.name || entry.deskripsi || '';
+
+        // Clean date format (hilangkan timestamp jika ada, misal: '1993-10-21 00:00:00.000' -> '1993-10-21')
+        let rawDate = entry.tanggal_perolehan || entry.TanggalPerolehan || entry.tgl_perolehan || entry.acquisition_date || entry.date || '';
+        let acqDate = '';
+        if (rawDate) {
+            if (typeof rawDate === 'string' && rawDate.includes(' ')) {
+                acqDate = rawDate.split(' ')[0];
+            } else if (typeof rawDate === 'string' && rawDate.includes('T')) {
+                acqDate = rawDate.split('T')[0];
+            } else {
+                acqDate = String(rawDate).trim();
+            }
+        }
+
+        const acqCost = parseCleanNumber(entry.harga_perolehan !== undefined ? entry.harga_perolehan : (entry.HargaPerolehan !== undefined ? entry.HargaPerolehan : (entry.acquisition_cost || entry.cost || entry.price)));
+        const accDepr = parseCleanNumber(entry.akumulasi_penyusutan !== undefined ? entry.akumulasi_penyusutan : (entry.AkumulasiPenyusutan !== undefined ? entry.AkumulasiPenyusutan : (entry.accumulated_depreciation || entry.depreciation)));
+        
+        let nbvVal = 0;
+        const rawNbv = entry.nbv !== undefined ? entry.nbv : (entry.Nbv !== undefined ? entry.Nbv : (entry.nilai_buku || entry.net_book_value));
+        if (rawNbv !== undefined && rawNbv !== null && rawNbv !== '') {
+            nbvVal = parseCleanNumber(rawNbv);
+        } else {
+            nbvVal = acqCost - accDepr;
+        }
+
+        const userPengguna = entry.asset_pic || entry.user_pengguna || entry.pengguna || entry.user || entry.pic || entry.pemegang_asset || entry.check_user_name || (entry.asset_location ? `(${entry.asset_location})` : '-');
+        const statusBarang = entry.asset_condition || entry.status_barang || entry.status || entry.kondisi || (entry.is_checked ? 'ADA' : 'ADA');
+        const imgRef = (entry.attachment && entry.attachment.length > 0) ? entry.attachment : (entry.foto_unit || entry.img_path || entry.foto || entry.hasilFoto || entry.image || '');
+        const keterangan = entry.remarks || entry.checked_remarks || entry.keterangan || entry.notes || entry.asset_location || entry.remark || entry.description || '';
 
         itemsArray.push({
             no: noVal,

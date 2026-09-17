@@ -91,8 +91,9 @@ async function handleExcelGeneration(req, res, reportType = 'yamaha') {
         const formattedReportType = String(reportType).toUpperCase().replace(/-/g, '_');
 
         if (reportType.includes('asset')) {
-            const branchName = items.branch_name || items.cabang || items.branch || 'AMBON';
-            filename = `Form_Asset_Counting_${String(branchName).toUpperCase()}_${new Date().getFullYear()}.xlsx`;
+            const branchName = items.office_branch_name || items.office_name || items.branch_name || items.cabang || items.branch || 'AMBON';
+            const year = items.fiscal_year || (items.doc_date ? new Date(items.doc_date).getFullYear() : (items.periode_start ? new Date(items.periode_start).getFullYear() : new Date().getFullYear()));
+            filename = `Form_Asset_Counting_${String(branchName).toUpperCase()}_${year}.xlsx`;
         } else {
             const firstDoc = (Array.isArray(items) ? items[0]?.doc_num : items?.doc_num) || 'EXPORT';
             const safeDocNum = String(firstDoc).replace(/[/\\?%*:|"<>]/g, '_');
