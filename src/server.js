@@ -62,6 +62,16 @@ app.get('/dummy_checkpoint_15.json', (req, res) => {
     });
 });
 
+// Serve Dokumentasi_Spesifikasi_Mapping_Asset_Counting.xlsx
+app.get('/Dokumentasi_Spesifikasi_Mapping_Asset_Counting.xlsx', (req, res) => {
+    const filePath = path.join(__dirname, '../Dokumentasi_Spesifikasi_Mapping_Asset_Counting.xlsx');
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            res.status(404).json({ error: 'Not Found', message: 'File dokumentasi tidak ditemukan.' });
+        }
+    });
+});
+
 // Helper function untuk handle request Excel generation
 async function handleExcelGeneration(req, res, reportType = 'yamaha') {
     try {
