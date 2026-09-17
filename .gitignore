@@ -3,6 +3,7 @@ node_modules/
 
 # Temporary generated Excel files
 *.xlsx
+!Dokumentasi_*.xlsx
 
 # Environment variables
 .env
