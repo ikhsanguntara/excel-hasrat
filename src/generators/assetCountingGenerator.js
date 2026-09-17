@@ -238,10 +238,10 @@ async function generateAssetCountingExcel(rawPayload) {
 
         const rowNum = idx + 1;
         const cell1 = worksheet.getCell(currentRow, 1); cell1.value = rowNum; cell1.alignment = alignCenter;
-        const cell2 = worksheet.getCell(currentRow, 2); cell2.value = item.nomor_asset_modul; cell2.alignment = alignCenter;
-        const cell3 = worksheet.getCell(currentRow, 3); cell3.value = item.nomor_asset_scan; cell3.alignment = alignCenter;
-        const cell4 = worksheet.getCell(currentRow, 4); cell4.value = item.nama_asset; cell4.alignment = alignLeft;
-        const cell5 = worksheet.getCell(currentRow, 5); cell5.value = item.tanggal_perolehan; cell5.alignment = alignCenter;
+        const cell2 = worksheet.getCell(currentRow, 2); cell2.value = item.nomor_asset_modul || '-'; cell2.alignment = alignCenter;
+        const cell3 = worksheet.getCell(currentRow, 3); cell3.value = item.nomor_asset_scan || '-'; cell3.alignment = alignCenter;
+        const cell4 = worksheet.getCell(currentRow, 4); cell4.value = item.nama_asset || '-'; cell4.alignment = alignLeft;
+        const cell5 = worksheet.getCell(currentRow, 5); cell5.value = item.tanggal_perolehan || '-'; cell5.alignment = alignCenter;
         
         // Formatted Currency Columns
         const cell6 = worksheet.getCell(currentRow, 6); 
@@ -260,9 +260,9 @@ async function generateAssetCountingExcel(rawPayload) {
         cell8.alignment = alignRight;
 
         const cell9 = worksheet.getCell(currentRow, 9); cell9.value = item.user_pengguna || '-'; cell9.alignment = alignCenter;
-        const cell10 = worksheet.getCell(currentRow, 10); cell10.value = item.status_barang || 'ADA'; cell10.alignment = alignCenter;
+        const cell10 = worksheet.getCell(currentRow, 10); cell10.value = item.status_barang || '-'; cell10.alignment = alignCenter;
         const cell11 = worksheet.getCell(currentRow, 11); cell11.alignment = alignCenter;
-        const cell12 = worksheet.getCell(currentRow, 12); cell12.value = item.keterangan || ''; cell12.alignment = alignLeft;
+        const cell12 = worksheet.getCell(currentRow, 12); cell12.value = item.keterangan || '-'; cell12.alignment = alignLeft;
 
         // Apply borders & font styling
         for (let c = 1; c <= 12; c++) {
