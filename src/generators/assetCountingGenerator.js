@@ -203,12 +203,7 @@ async function generateAssetCountingExcel(rawPayload) {
         cell.border = borderCell;
         cell.font = { name: FONT_FAMILY, size: 9, bold: true, color: { argb: 'FF000000' } };
         worksheet.getColumn(colNum).width = h.width;
-
-        if (h.type === 'blue') {
-            cell.fill = fillHeaderBlue;
-        } else {
-            cell.fill = fillHeaderYellow;
-        }
+        cell.fill = fillHeaderBlue; // Semua header berwarna biru
     });
 
     let currentRow = headerRowIdx;
@@ -264,16 +259,12 @@ async function generateAssetCountingExcel(rawPayload) {
         const cell11 = worksheet.getCell(currentRow, 11); cell11.alignment = alignCenter;
         const cell12 = worksheet.getCell(currentRow, 12); cell12.value = item.keterangan || '-'; cell12.alignment = alignLeft;
 
-        // Apply borders & font styling
+        // Apply borders & font styling (tanpa warna latar / no cell fill)
         for (let c = 1; c <= 12; c++) {
             const cell = worksheet.getCell(currentRow, c);
             cell.border = borderCell;
             cell.font = { name: FONT_FAMILY, size: 9, color: { argb: 'FF000000' } };
         }
-
-        // Kolom C (NOMOR ASSET SCAN) & Kolom J (STATUS BARANG) memiliki latar kuning sesuai screenshot
-        cell3.fill = fillCellYellow;
-        cell10.fill = fillCellYellow;
 
         // Handle Photo Embedding di Kolom 11 (K)
         if (imgData) {

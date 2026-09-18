@@ -103,14 +103,14 @@ async function createMappingDoc() {
     const colDataMapping = [
         ['Kolom A', 'NO', '(Nomor Urut Iterasi)', 'Integer', '1, 2, 3, ...', 'Nomor urut baris di Excel (1, 2, 3, ...)'],
         ['Kolom B', 'NOMOR ASSET MODUL', 'item_code', 'String', '30200B9902001', 'Nomor / kode aset dari modul SAP'],
-        ['Kolom C', 'NOMOR ASSET SCAN', 'serial', 'String', '30200B9902001', 'Nomor barcode hasil scan fisik (Highlight Kuning #FFFF00)'],
+        ['Kolom C', 'NOMOR ASSET SCAN', 'serial', 'String', '30200B9902001', 'Nomor barcode hasil scan fisik'],
         ['Kolom D', 'NAMA ASSET', 'item_name', 'String', 'BANGUNAN', 'Nama / deskripsi barang aset'],
         ['Kolom E', 'TANGGAL PEROLEHAN', 'tanggal_perolehan', 'String (Date)', '1993-10-21 00:00:00.000', 'Tanggal perolehan (Format YYYY-MM-DD, jam dibersihkan)'],
         ['Kolom F', 'HARGA PEROLEHAN', 'harga_perolehan', 'Number / String', '2696351206.000000', 'Harga beli perolehan (Format Angka #,##0)'],
         ['Kolom G', 'AKUMULASI PENYUSUTAN', 'akumulasi_penyusutan', 'Number / String', '.000000', 'Akumulasi depresiasi (Format Angka #,##0, .000000 -> 0)'],
         ['Kolom H', 'NBV', 'nbv', 'Number / String', '2696351206.000000', 'Net Book Value / Nilai Buku (Format Angka #,##0)'],
         ['Kolom I', 'USER/PENGGUNA', 'asset_pic', 'String', 'Sunardi', 'Nama PIC / pemegang aset (Jika null tampil -)'],
-        ['Kolom J', 'STATUS BARANG', 'asset_condition', 'String', 'ADA / BAIK / RUSAK / null', 'Kondisi barang hasil cek (Jika null tampil -, Cell Kuning #FFFF00)'],
+        ['Kolom J', 'STATUS BARANG', 'asset_condition', 'String', 'ADA / BAIK / RUSAK / null', 'Kondisi barang hasil cek (Jika null tampil -)'],
         ['Kolom K', 'FOTO UNIT / KETERANGAN', 'attachment', 'Array [URL]', '[\"https://.../foto1.jpg\"]', 'Foto unit ter-embed rapi (1-5 foto per baris)'],
         ['Kolom L', 'KETERANGAN', 'asset_location', 'String', 'CAB. BIAK', 'Lokasi fisik / catatan aset di cabang']
     ];
@@ -151,20 +151,20 @@ async function createMappingDoc() {
     wsSample.getRow(3).height = 18;
     wsSample.getRow(4).height = 10;
 
-    // Header Tabel
+    // Header Tabel (Semua Biru)
     const tableHeaders = [
-        { h: 'NO', w: 6, b: false },
-        { h: 'NOMOR ASSET\nMODUL', w: 20, b: false },
-        { h: 'NOMOR ASSET SCAN', w: 20, b: false },
-        { h: 'NAMA ASSET', w: 28, b: false },
-        { h: 'TANGGAL PEROLEHAN', w: 18, b: true },
-        { h: 'HARGA PEROLEHAN', w: 20, b: true },
-        { h: 'AKUMULASI\nPENYUSUTAN', w: 20, b: true },
-        { h: 'NBV', w: 18, b: true },
-        { h: 'USER/PENGGUNA', w: 22, b: false },
-        { h: 'STATUS BARANG', w: 16, b: false },
-        { h: 'FOTO UNIT / KETERANGAN', w: 30, b: false },
-        { h: 'KETERANGAN', w: 24, b: false }
+        { h: 'NO', w: 6 },
+        { h: 'NOMOR ASSET\nMODUL', w: 20 },
+        { h: 'NOMOR ASSET SCAN', w: 20 },
+        { h: 'NAMA ASSET', w: 28 },
+        { h: 'TANGGAL PEROLEHAN', w: 18 },
+        { h: 'HARGA PEROLEHAN', w: 20 },
+        { h: 'AKUMULASI\nPENYUSUTAN', w: 20 },
+        { h: 'NBV', w: 18 },
+        { h: 'USER/PENGGUNA', w: 22 },
+        { h: 'STATUS BARANG', w: 16 },
+        { h: 'FOTO UNIT / KETERANGAN', w: 30 },
+        { h: 'KETERANGAN', w: 24 }
     ];
 
     const r5 = wsSample.getRow(5);
@@ -175,16 +175,16 @@ async function createMappingDoc() {
         c.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
         c.border = borderDark;
         c.font = { name: FONT_FAMILY, size: 9, bold: true };
-        c.fill = th.b ? fillHeaderSoftBlue : fillHeaderYellow;
+        c.fill = fillHeaderSoftBlue; // Semua header biru
         wsSample.getColumn(i + 1).width = th.w;
     });
 
     const sampleRows = [
-        [1, '30200B9902001', '30200B9902001', 'BANGUNAN', '1993-10-21', 2696351206, 0, 2696351206, '-', 'ADA', '[Foto Unit Disematkan]', 'CAB. BIAK'],
-        [2, '30200B1502001', '30200B1502001', 'RENOVASI BANGUNAN GEDUNG', '-', 0, 0, 0, '-', 'ADA', '-', 'CAB. BIAK'],
+        [1, '30200B9902001', '30200B9902001', 'BANGUNAN', '1993-10-21', 2696351206, 0, 2696351206, '-', '-', '[Foto Unit Disematkan]', 'CAB. BIAK'],
+        [2, '30200B1502001', '30200B1502001', 'RENOVASI BANGUNAN GEDUNG', '-', 0, 0, 0, '-', '-', '-', 'CAB. BIAK'],
         [3, '30200K0302001', '30200K0302001', 'NOUVO', '2014-07-18', 10346600, 1939987, 8406613, 'Sunardi', 'ADA', '[Foto Unit Disematkan]', 'CAB. BIAK'],
-        [4, '30200K1502001', '30200K1502001', 'AVANZA (X-TARIKAN HMF)', '-', 0, 0, 0, '-', 'ADA', '-', 'CAB. BIAK'],
-        [5, '30200P0402001', '30200P0402001', '1 set Meja Negosiasi ( 4 kursi & 1 Meja )', '-', 0, 0, 0, '-', 'ADA', '-', 'CAB. BIAK']
+        [4, '30200K1502001', '30200K1502001', 'AVANZA (X-TARIKAN HMF)', '-', 0, 0, 0, '-', '-', '-', 'CAB. BIAK'],
+        [5, '30200P0402001', '30200P0402001', '1 set Meja Negosiasi ( 4 kursi & 1 Meja )', '-', 0, 0, 0, '-', '-', '-', 'CAB. BIAK']
     ];
 
     sampleRows.forEach((sRow, idx) => {
@@ -205,11 +205,6 @@ async function createMappingDoc() {
                 c.numFmt = '#,##0';
             } else {
                 c.alignment = { horizontal: 'left', vertical: 'middle' };
-            }
-
-            // Yellow fill for scan num and status
-            if (cIdx === 2 || cIdx === 9) {
-                c.fill = fillCellYellow;
             }
         });
     });
