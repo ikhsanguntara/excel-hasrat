@@ -20,19 +20,19 @@ function parseCleanNumber(val) {
  * MAPPING FIELD (16 Kolom A–P) — Field JSON Backend (PASTI / FIX)
  * ════════════════════════════════════════════════════════════════════════
  * A  NO                    → (auto index)
- * B  ASSET CLASS           → asset_class          (baru, request ke BE)
- * C  NOMOR SAP             → sap_number           (baru, request ke BE)
- * D  NOMOR ASSET MODUL     → item_code
- * E  NAMA ASSET            → item_name
+ * B  ASSET CLASS           → asset_class
+ * C  NOMOR SAP             → nomor_sap
+ * D  NOMOR ASSET MODUL     → nomor_asset_modul
+ * E  NAMA ASSET            → nama_asset
  * F  TANGGAL PEROLEHAN     → tanggal_perolehan    (YYYY-MM-DD, jam dibuang)
- * G  HARGA PEROLEHAN       → harga_perolehan      (#,##0 ; null/".000000" → 0)
- * H  AKUMULASI PENYUSUTAN  → akumulasi_penyusutan (#,##0 ; null/".000000" → 0)
- * I  NBV                   → nbv                  (#,##0 ; null/".000000" → 0)
- * J  Quantity On Hand      → qty_on_hand          (baru, request ke BE ; null → 1)
- * K  Quantity Hasil Opname → qty_opname           (baru, request ke BE ; null → -)
+ * G  HARGA PEROLEHAN       → harga_perolehan      (#,##0 ; ".000000" → 0)
+ * H  AKUMULASI PENYUSUTAN  → akumulasi_penyusutan (#,##0 ; ".000000" → 0)
+ * I  NBV                   → nbv                  (#,##0 ; ".000000" → 0)
+ * J  Quantity On Hand      → quantity_on_hand     (null → 1)
+ * K  Quantity Hasil Opname → quantity_hasil_opname(null → -)
  * L  USER/PENGGUNA         → asset_pic
- * M  STATUS BARANG         → asset_condition
- * N  KONDISI BARANG        → kondisi_barang       (baru, request ke BE)
+ * M  STATUS BARANG         → status_barang
+ * N  KONDISI BARANG        → kondisi_barang
  * O  FOTO UNIT/KETERANGAN  → attachment           (Array URL ; kosong/[] → -)
  * P  KETERANGAN            → asset_location
  * ════════════════════════════════════════════════════════════════════════
@@ -83,62 +83,59 @@ function normalizeAssetCountingData(rawPayload) {
         const assetClass = (entry.asset_class && String(entry.asset_class).trim())
             ? String(entry.asset_class).trim() : '-';
 
-        // ── C: NOMOR SAP → sap_number ───────────────────────────────────────
-        const nomorSap = (entry.sap_number && String(entry.sap_number).trim())
-            ? String(entry.sap_number).trim() : '-';
+        // ── C: NOMOR SAP → nomor_sap ────────────────────────────────────────
+        const nomorSap = (entry.nomor_sap && String(entry.nomor_sap).trim())
+            ? String(entry.nomor_sap).trim() : '-';
 
-        // ── D: NOMOR ASSET MODUL → item_code ────────────────────────────────
-        const modulNum = (entry.item_code && String(entry.item_code).trim())
-            ? String(entry.item_code).trim() : '-';
+        // ── D: NOMOR ASSET MODUL → nomor_asset_modul ────────────────────────
+        const modulNum = (entry.nomor_asset_modul && String(entry.nomor_asset_modul).trim())
+            ? String(entry.nomor_asset_modul).trim() : '-';
 
-        // ── E: NOMOR ASSET SCAN → serial ────────────────────────────────────
-        const scanNum = (entry.serial && String(entry.serial).trim())
-            ? String(entry.serial).trim() : '-';
+        // ── E: NAMA ASSET → nama_asset ───────────────────────────────────────
+        const assetName = (entry.nama_asset && String(entry.nama_asset).trim())
+            ? String(entry.nama_asset).trim() : '-';
 
-        // ── F: NAMA ASSET → item_name ────────────────────────────────────────
-        const assetName = (entry.item_name && String(entry.item_name).trim())
-            ? String(entry.item_name).trim() : '-';
-
-        // ── G: TANGGAL PEROLEHAN → tanggal_perolehan ─────────────────────────
+        // ── F: TANGGAL PEROLEHAN → tanggal_perolehan (YYYY-MM-DD, jam dibuang)
         let acqDate = '-';
         if (entry.tanggal_perolehan) {
             const cleaned = String(entry.tanggal_perolehan).split(' ')[0].split('T')[0].trim();
             acqDate = cleaned || '-';
         }
 
-        // ── H: HARGA PEROLEHAN → harga_perolehan ─────────────────────────────
+        // ── G: HARGA PEROLEHAN → harga_perolehan (#,##0 ; ".000000" → 0) ────
         const acqCost = parseCleanNumber(entry.harga_perolehan);
 
-        // ── I: AKUMULASI PENYUSUTAN → akumulasi_penyusutan ───────────────────
+        // ── H: AKUMULASI PENYUSUTAN → akumulasi_penyusutan ───────────────────
         const accDepr = parseCleanNumber(entry.akumulasi_penyusutan);
 
-        // ── J: NBV → nbv ─────────────────────────────────────────────────────
+        // ── I: NBV → nbv ─────────────────────────────────────────────────────
         const nbvVal = parseCleanNumber(entry.nbv);
 
-        // ── K: QUANTITY ON HAND → qty_on_hand (null → 1) ─────────────────────
-        const qtyOnHand = (entry.qty_on_hand !== null && entry.qty_on_hand !== undefined && entry.qty_on_hand !== '')
-            ? parseCleanNumber(entry.qty_on_hand) : 1;
+        // ── J: QUANTITY ON HAND → quantity_on_hand (null → 1) ───────────────
+        const qtyOnHand = (entry.quantity_on_hand !== null && entry.quantity_on_hand !== undefined && entry.quantity_on_hand !== '')
+            ? parseCleanNumber(entry.quantity_on_hand) : 1;
 
-        // ── L: QUANTITY HASIL OPNAME → qty_opname (null → '-') ───────────────
-        const qtyOpname = (entry.qty_opname !== null && entry.qty_opname !== undefined && entry.qty_opname !== '')
-            ? parseCleanNumber(entry.qty_opname) : '-';
+        // ── K: QUANTITY HASIL OPNAME → quantity_hasil_opname (null → '-') ───
+        const qtyOpname = (entry.quantity_hasil_opname !== null && entry.quantity_hasil_opname !== undefined && entry.quantity_hasil_opname !== '')
+            ? parseCleanNumber(entry.quantity_hasil_opname) : '-';
 
-        // ── M: USER/PENGGUNA → asset_pic ─────────────────────────────────────
+        // ── L: USER/PENGGUNA → asset_pic ─────────────────────────────────────
         const userPengguna = (entry.asset_pic && String(entry.asset_pic).trim())
             ? String(entry.asset_pic).trim() : '-';
 
-        // ── N: STATUS BARANG → asset_condition ───────────────────────────────
-        const statusBarang = (entry.asset_condition && String(entry.asset_condition).trim())
-            ? String(entry.asset_condition).trim() : '-';
+        // ── M: STATUS BARANG → status_barang ─────────────────────────────────
+        const statusBarang = (entry.status_barang && String(entry.status_barang).trim())
+            ? String(entry.status_barang).trim() : '-';
 
-        // ── O: KONDISI BARANG → kondisi_barang ───────────────────────────────
+        // ── N: KONDISI BARANG → kondisi_barang ───────────────────────────────
         const kondisiBarang = (entry.kondisi_barang && String(entry.kondisi_barang).trim())
             ? String(entry.kondisi_barang).trim() : '-';
 
-        // ── P: FOTO UNIT/KETERANGAN → attachment ─────────────────────────────
-        const imgRef = entry.attachment || '';
+        // ── O: FOTO UNIT/KETERANGAN → attachment (Array URL ; kosong/[] → -)──
+        const imgRef = (Array.isArray(entry.attachment) && entry.attachment.length > 0)
+            ? entry.attachment : '';
 
-        // ── Q: KETERANGAN → asset_location ───────────────────────────────────
+        // ── P: KETERANGAN → asset_location ───────────────────────────────────
         const keterangan = (entry.asset_location && String(entry.asset_location).trim())
             ? String(entry.asset_location).trim() : '-';
 
