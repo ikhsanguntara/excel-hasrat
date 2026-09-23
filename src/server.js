@@ -223,6 +223,7 @@ if (require.main === module) {
         console.log(`📌 Yamaha Endpoint: POST http://localhost:${PORT}/api/v1/generate-excel/yamaha`);
         console.log(`📌 Toyota Endpoint: POST http://localhost:${PORT}/api/v1/generate-excel/toyota`);
         console.log(`📌 Asset Counting Endpoint: POST http://localhost:${PORT}/api/v1/generate-excel/asset-counting`);
+        console.log(`💚 Health Check Endpoint: GET http://localhost:${PORT}/health`);
     });
 }
 
