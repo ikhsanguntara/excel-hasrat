@@ -9,6 +9,46 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
+// Helper untuk format uptime
+function formatUptime(seconds) {
+    const d = Math.floor(seconds / (3600 * 24));
+    const h = Math.floor((seconds % (3600 * 24)) / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    const parts = [];
+    if (d > 0) parts.push(`${d}d`);
+    if (h > 0) parts.push(`${h}h`);
+    if (m > 0) parts.push(`${m}m`);
+    parts.push(`${s}s`);
+    return parts.join(' ');
+}
+
+// Handler Health Check
+const handleHealthCheck = (req, res) => {
+    const uptimeSec = process.uptime();
+    const mem = process.memoryUsage();
+    res.status(200).json({
+        status: 'OK',
+        message: 'Excel Generator Service is healthy and running',
+        timestamp: new Date().toISOString(),
+        uptime: formatUptime(uptimeSec),
+        uptime_seconds: Math.floor(uptimeSec),
+        memory: {
+            rss: `${Math.round(mem.rss / 1024 / 1024)} MB`,
+            heapTotal: `${Math.round(mem.heapTotal / 1024 / 1024)} MB`,
+            heapUsed: `${Math.round(mem.heapUsed / 1024 / 1024)} MB`
+        },
+        node_version: process.version,
+        environment: process.env.NODE_ENV || 'development'
+    });
+};
+
+// Health Check Endpoints
+app.get('/health', handleHealthCheck);
+app.get('/healthz', handleHealthCheck);
+app.get('/api/v1/health', handleHealthCheck);
+app.get('/api/health', handleHealthCheck);
+
 // Serve static frontend UI files from public/
 app.use(express.static(path.join(__dirname, '../public')));
 

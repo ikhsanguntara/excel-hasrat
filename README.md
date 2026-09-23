@@ -59,7 +59,38 @@ Aplikasi berjalan pada: `http://localhost:8000`
 
 ---
 
-### 2. Endpoint Data Sampel & Dummy JSON (`GET`)
+### 2. Health Check Endpoints (`GET`)
+
+Digunakan untuk monitoring server liveness/readiness, Docker/Kubernetes health probes, dan uptime monitoring.
+
+| Method | Endpoint | Deskripsi | Status Code |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/health` | Standar Health Check (Uptime, Memory, Status) | `200 OK` |
+| `GET` | `/healthz` | Standar probe Docker / K8s | `200 OK` |
+| `GET` | `/api/v1/health` | REST API versioned health check | `200 OK` |
+| `GET` | `/api/health` | Alias health check | `200 OK` |
+
+Contoh Response JSON:
+```json
+{
+  "status": "OK",
+  "message": "Excel Generator Service is healthy and running",
+  "timestamp": "2026-09-23T05:26:23.368Z",
+  "uptime": "2h 15m 30s",
+  "uptime_seconds": 8130,
+  "memory": {
+    "rss": "95 MB",
+    "heapTotal": "34 MB",
+    "heapUsed": "19 MB"
+  },
+  "node_version": "v24.11.1",
+  "environment": "development"
+}
+```
+
+---
+
+### 3. Endpoint Data Sampel & Dummy JSON (`GET`)
 
 | Method | Endpoint | Deskripsi |
 | :--- | :--- | :--- |
@@ -71,7 +102,7 @@ Aplikasi berjalan pada: `http://localhost:8000`
 
 ---
 
-### 3. Web Dashboard Frontend (`GET`)
+### 4. Web Dashboard Frontend (`GET`)
 
 | Method | Endpoint | Deskripsi |
 | :--- | :--- | :--- |
@@ -157,6 +188,13 @@ curl -X POST http://localhost:8000/api/v1/generate-excel/yamaha \
   -H "Content-Type: application/json" \
   -d @dummy_checkpoint_15.json \
   --output Laporan_Yamaha.xlsx
+```
+
+### 4. Health Check / Status Server:
+```bash
+curl -X GET http://localhost:8000/health
+# atau
+curl -X GET http://localhost:8000/api/v1/health
 ```
 
 ---
