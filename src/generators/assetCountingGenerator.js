@@ -17,25 +17,24 @@ function parseCleanNumber(val) {
  * Normalizer untuk mengubah data JSON Asset Counting menjadi flat array item yang seragam.
  *
  * ════════════════════════════════════════════════════════════════════════
- * MAPPING FIELD (17 Kolom A–Q) — Field JSON Backend (PASTI / FIX)
+ * MAPPING FIELD (16 Kolom A–P) — Field JSON Backend (PASTI / FIX)
  * ════════════════════════════════════════════════════════════════════════
  * A  NO                    → (auto index)
  * B  ASSET CLASS           → asset_class          (baru, request ke BE)
  * C  NOMOR SAP             → sap_number           (baru, request ke BE)
  * D  NOMOR ASSET MODUL     → item_code
- * E  NOMOR ASSET SCAN      → serial
- * F  NAMA ASSET            → item_name
- * G  TANGGAL PEROLEHAN     → tanggal_perolehan    (YYYY-MM-DD, jam dibuang)
- * H  HARGA PEROLEHAN       → harga_perolehan      (#,##0 ; null/".000000" → 0)
- * I  AKUMULASI PENYUSUTAN  → akumulasi_penyusutan (#,##0 ; null/".000000" → 0)
- * J  NBV                   → nbv                  (#,##0 ; null/".000000" → 0)
- * K  Quantity On Hand      → qty_on_hand          (baru, request ke BE ; null → 1)
- * L  Quantity Hasil Opname → qty_opname           (baru, request ke BE ; null → -)
- * M  USER/PENGGUNA         → asset_pic
- * N  STATUS BARANG         → asset_condition
- * O  KONDISI BARANG        → kondisi_barang       (baru, request ke BE)
- * P  FOTO UNIT/KETERANGAN  → attachment           (Array URL ; kosong/[] → -)
- * Q  KETERANGAN            → asset_location
+ * E  NAMA ASSET            → item_name
+ * F  TANGGAL PEROLEHAN     → tanggal_perolehan    (YYYY-MM-DD, jam dibuang)
+ * G  HARGA PEROLEHAN       → harga_perolehan      (#,##0 ; null/".000000" → 0)
+ * H  AKUMULASI PENYUSUTAN  → akumulasi_penyusutan (#,##0 ; null/".000000" → 0)
+ * I  NBV                   → nbv                  (#,##0 ; null/".000000" → 0)
+ * J  Quantity On Hand      → qty_on_hand          (baru, request ke BE ; null → 1)
+ * K  Quantity Hasil Opname → qty_opname           (baru, request ke BE ; null → -)
+ * L  USER/PENGGUNA         → asset_pic
+ * M  STATUS BARANG         → asset_condition
+ * N  KONDISI BARANG        → kondisi_barang       (baru, request ke BE)
+ * O  FOTO UNIT/KETERANGAN  → attachment           (Array URL ; kosong/[] → -)
+ * P  KETERANGAN            → asset_location
  * ════════════════════════════════════════════════════════════════════════
  */
 function normalizeAssetCountingData(rawPayload) {
@@ -148,7 +147,6 @@ function normalizeAssetCountingData(rawPayload) {
             asset_class:          assetClass,
             nomor_sap:            nomorSap,
             nomor_asset_modul:    modulNum,
-            nomor_asset_scan:     scanNum,
             nama_asset:           assetName,
             tanggal_perolehan:    acqDate,
             harga_perolehan:      acqCost,
@@ -169,7 +167,7 @@ function normalizeAssetCountingData(rawPayload) {
 
 /**
  * Generator Laporan FORM ASSET COUNTING (PT HASJRAT ABADI)
- * 17 Kolom (A–Q)
+ * 16 Kolom (A–P)
  */
 async function generateAssetCountingExcel(rawPayload) {
     const { items, meta } = normalizeAssetCountingData(rawPayload);
@@ -180,10 +178,9 @@ async function generateAssetCountingExcel(rawPayload) {
     });
 
     const FONT  = 'Segoe UI';
-    const TOTAL = 17;
+    const TOTAL = 16;
 
-    const fillYellow = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } };
-    const fillBlue   = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFB8CCE4' } };
+    const fillBlue = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFB8CCE4' } };
 
     const border = {
         top:    { style: 'thin', color: { argb: 'FF000000' } },
@@ -215,23 +212,22 @@ async function generateAssetCountingExcel(rawPayload) {
 
     // ── HEADER TABEL (Baris 5) ───────────────────────────────────────────────
     const headers = [
-        { label: 'NO',                      w: 6,  fill: fillYellow },  // A
-        { label: 'ASSET CLASS',             w: 18, fill: fillYellow },  // B
-        { label: 'NOMOR SAP',               w: 18, fill: fillYellow },  // C
-        { label: 'NOMOR ASSET\nMODUL',      w: 20, fill: fillYellow },  // D
-        { label: 'NOMOR ASSET SCAN',        w: 20, fill: fillYellow },  // E
-        { label: 'NAMA ASSET',              w: 28, fill: fillBlue   },  // F
-        { label: 'TANGGAL\nPEROLEHAN',      w: 18, fill: fillBlue   },  // G
-        { label: 'HARGA PEROLEHAN',         w: 20, fill: fillBlue   },  // H
-        { label: 'AKUMULASI\nPENYUSUTAN',   w: 20, fill: fillBlue   },  // I
-        { label: 'NBV',                     w: 18, fill: fillBlue   },  // J
-        { label: 'Quantity On Hand',        w: 16, fill: fillYellow },  // K
-        { label: 'Quantity Hasil\nOpname',  w: 16, fill: fillYellow },  // L
-        { label: 'USER/PENGGUNA',           w: 22, fill: fillBlue   },  // M
-        { label: 'STATUS BARANG',           w: 16, fill: fillYellow },  // N
-        { label: 'KONDISI BARANG',          w: 16, fill: fillYellow },  // O
-        { label: 'FOTO UNIT / KETERANGAN',  w: 65, fill: fillBlue   },  // P
-        { label: 'KETERANGAN',              w: 24, fill: fillYellow }   // Q
+        { label: 'NO',                      w: 6  },  // A
+        { label: 'ASSET CLASS',             w: 18 },  // B
+        { label: 'NOMOR SAP',               w: 18 },  // C
+        { label: 'NOMOR ASSET\nMODUL',      w: 20 },  // D
+        { label: 'NAMA ASSET',              w: 28 },  // E
+        { label: 'TANGGAL\nPEROLEHAN',      w: 18 },  // F
+        { label: 'HARGA PEROLEHAN',         w: 20 },  // G
+        { label: 'AKUMULASI\nPENYUSUTAN',   w: 20 },  // H
+        { label: 'NBV',                     w: 18 },  // I
+        { label: 'Quantity On Hand',        w: 16 },  // J
+        { label: 'Quantity Hasil\nOpname',  w: 16 },  // K
+        { label: 'USER/PENGGUNA',           w: 22 },  // L
+        { label: 'STATUS BARANG',           w: 16 },  // M
+        { label: 'KONDISI BARANG',          w: 16 },  // N
+        { label: 'FOTO UNIT / KETERANGAN',  w: 65 },  // O
+        { label: 'KETERANGAN',              w: 24 }   // P
     ];
 
     const HDR_ROW = 5;
@@ -240,7 +236,7 @@ async function generateAssetCountingExcel(rawPayload) {
     headers.forEach((h, i) => {
         const cell = worksheet.getCell(HDR_ROW, i + 1);
         cell.value     = h.label;
-        cell.fill      = h.fill;
+        cell.fill      = fillBlue;
         cell.border    = border;
         cell.alignment = aC;
         cell.font      = { name: FONT, size: 9, bold: true };
@@ -257,7 +253,7 @@ async function generateAssetCountingExcel(rawPayload) {
             if (w > maxFotoW) maxFotoW = w;
         }
     });
-    worksheet.getColumn(16).width = maxFotoW; // Kolom P
+    worksheet.getColumn(15).width = maxFotoW; // Kolom O = foto
 
     // ── DATA BARIS ───────────────────────────────────────────────────────────
     let curRow = HDR_ROW;
@@ -272,19 +268,18 @@ async function generateAssetCountingExcel(rawPayload) {
             { v: it.asset_class,               a: aC },               // B
             { v: it.nomor_sap,                 a: aC },               // C
             { v: it.nomor_asset_modul,         a: aC },               // D
-            { v: it.nomor_asset_scan,          a: aC },               // E
-            { v: it.nama_asset,                a: aL },               // F
-            { v: it.tanggal_perolehan,         a: aC },               // G
-            { v: it.harga_perolehan || 0,      a: aR, fmt: '#,##0' }, // H
-            { v: it.akumulasi_penyusutan || 0, a: aR, fmt: '#,##0' }, // I
-            { v: it.nbv || 0,                  a: aR, fmt: '#,##0' }, // J
-            { v: it.qty_on_hand,               a: aC },               // K
-            { v: it.qty_opname,                a: aC },               // L
-            { v: it.user_pengguna,             a: aC },               // M
-            { v: it.status_barang,             a: aC },               // N
-            { v: it.kondisi_barang,            a: aC },               // O
-            { v: null,                         a: aC },               // P (foto embed)
-            { v: it.keterangan,                a: aL }                // Q
+            { v: it.nama_asset,                a: aL },               // E
+            { v: it.tanggal_perolehan,         a: aC },               // F
+            { v: it.harga_perolehan || 0,      a: aR, fmt: '#,##0' }, // G
+            { v: it.akumulasi_penyusutan || 0, a: aR, fmt: '#,##0' }, // H
+            { v: it.nbv || 0,                  a: aR, fmt: '#,##0' }, // I
+            { v: it.qty_on_hand,               a: aC },               // J
+            { v: it.qty_opname,                a: aC },               // K
+            { v: it.user_pengguna,             a: aC },               // L
+            { v: it.status_barang,             a: aC },               // M
+            { v: it.kondisi_barang,            a: aC },               // N
+            { v: null,                         a: aC },               // O (foto embed)
+            { v: it.keterangan,                a: aL }                // P
         ];
 
         rows.forEach((d, ci) => {
@@ -296,24 +291,24 @@ async function generateAssetCountingExcel(rawPayload) {
             cell.font   = { name: FONT, size: 9 };
         });
 
-        // Embed foto di kolom P (index 16)
+        // Embed foto di kolom O (index 15)
         if (img) {
             const imgId = workbook.addImage({ buffer: img.buffer, extension: 'png' });
             const w     = Math.round(img.widthPx / 7) + 6;
-            if (w > maxFotoW) { maxFotoW = w; worksheet.getColumn(16).width = w; }
+            if (w > maxFotoW) { maxFotoW = w; worksheet.getColumn(15).width = w; }
             worksheet.getRow(curRow).height = Math.max(120, Math.round((img.heightPx + 20) * 0.75));
             worksheet.addImage(imgId, {
-                tl:     { col: 15.04, row: (curRow - 1) + 0.04 },
+                tl:     { col: 14.04, row: (curRow - 1) + 0.04 },
                 ext:    { width: img.widthPx, height: img.heightPx },
                 editAs: 'oneCell'
             });
         } else {
             worksheet.getRow(curRow).height = 24;
-            worksheet.getCell(curRow, 16).value = '-';
+            worksheet.getCell(curRow, 15).value = '-';
         }
     }
 
-    // AutoFilter A5:Q[lastRow]
+    // AutoFilter A5:P[lastRow]
     worksheet.autoFilter = {
         from: { row: HDR_ROW, column: 1 },
         to:   { row: curRow,  column: TOTAL }
