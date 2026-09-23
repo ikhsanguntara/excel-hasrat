@@ -253,8 +253,19 @@ async function processCheckpointPhotos(imgPathInput) {
     return result;
 }
 
+/**
+ * Mengambil statistik in-memory cache gambar
+ */
+function getImageCacheStats() {
+    return {
+        raw_images_cached: rawImageCache.size,
+        processed_thumbs_cached: processedThumbCache.size
+    };
+}
+
 module.exports = {
     processCheckpointPhotos,
+    getImageCacheStats,
     BASE_IMAGE_URL,
     THUMB_WIDTH,
     THUMB_HEIGHT

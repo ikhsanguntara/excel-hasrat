@@ -1,6 +1,9 @@
+const os = require('os');
 const path = require('path');
 const express = require('express');
 const { generateCheckpointExcel } = require('./excelGenerator');
+const { getImageCacheStats } = require('./imageHandler');
+const packageInfo = require('../package.json');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -23,22 +26,47 @@ function formatUptime(seconds) {
     return parts.join(' ');
 }
 
-// Handler Health Check
+// Handler Health Check (Rich System, Service & Metrics Info)
 const handleHealthCheck = (req, res) => {
     const uptimeSec = process.uptime();
     const mem = process.memoryUsage();
+    const cpus = os.cpus();
+
     res.status(200).json({
         status: 'OK',
         message: 'Excel Generator Service is healthy and running',
+        service: {
+            name: packageInfo.name || 'excel_ai',
+            version: packageInfo.version || '1.0.0',
+            description: packageInfo.description || 'JSON to Excel Inspection Report Generator API'
+        },
         timestamp: new Date().toISOString(),
         uptime: formatUptime(uptimeSec),
         uptime_seconds: Math.floor(uptimeSec),
-        memory: {
+        system: {
+            hostname: os.hostname(),
+            platform: `${os.platform()} (${os.type()})`,
+            arch: os.arch(),
+            release: os.release(),
+            node_version: process.version,
+            pid: process.pid,
+            cpu_cores: cpus ? cpus.length : 0,
+            cpu_model: cpus && cpus[0] ? cpus[0].model : 'Unknown',
+            total_memory: `${(os.totalmem() / (1024 ** 3)).toFixed(2)} GB`,
+            free_memory: `${(os.freemem() / (1024 ** 3)).toFixed(2)} GB`
+        },
+        process_memory: {
             rss: `${Math.round(mem.rss / 1024 / 1024)} MB`,
             heapTotal: `${Math.round(mem.heapTotal / 1024 / 1024)} MB`,
-            heapUsed: `${Math.round(mem.heapUsed / 1024 / 1024)} MB`
+            heapUsed: `${Math.round(mem.heapUsed / 1024 / 1024)} MB`,
+            external: `${Math.round(mem.external / 1024 / 1024)} MB`
         },
-        node_version: process.version,
+        features: {
+            supported_reports: ['asset-counting', 'toyota', 'yamaha'],
+            image_cache: getImageCacheStats(),
+            excel_engine: 'ExcelJS v4.4.0',
+            image_engine: 'Sharp v0.33.5'
+        },
         environment: process.env.NODE_ENV || 'development'
     });
 };

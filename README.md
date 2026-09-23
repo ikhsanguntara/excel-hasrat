@@ -75,15 +75,45 @@ Contoh Response JSON:
 {
   "status": "OK",
   "message": "Excel Generator Service is healthy and running",
-  "timestamp": "2026-09-23T05:26:23.368Z",
+  "service": {
+    "name": "excel_ai",
+    "version": "1.0.0",
+    "description": "JSON to Excel Inspection Report Generator API (Yamaha & Toyota)"
+  },
+  "timestamp": "2026-09-23T05:33:24.631Z",
   "uptime": "2h 15m 30s",
   "uptime_seconds": 8130,
-  "memory": {
-    "rss": "95 MB",
-    "heapTotal": "34 MB",
-    "heapUsed": "19 MB"
+  "system": {
+    "hostname": "srv-hasjrat-01",
+    "platform": "linux (Linux)",
+    "arch": "x64",
+    "release": "5.15.0-generic",
+    "node_version": "v24.11.1",
+    "pid": 31677,
+    "cpu_cores": 8,
+    "cpu_model": "Intel(R) Xeon(R) CPU",
+    "total_memory": "16.00 GB",
+    "free_memory": "9.45 GB"
   },
-  "node_version": "v24.11.1",
+  "process_memory": {
+    "rss": "85 MB",
+    "heapTotal": "33 MB",
+    "heapUsed": "20 MB",
+    "external": "3 MB"
+  },
+  "features": {
+    "supported_reports": [
+      "asset-counting",
+      "toyota",
+      "yamaha"
+    ],
+    "image_cache": {
+      "raw_images_cached": 0,
+      "processed_thumbs_cached": 0
+    },
+    "excel_engine": "ExcelJS v4.4.0",
+    "image_engine": "Sharp v0.33.5"
+  },
   "environment": "development"
 }
 ```
